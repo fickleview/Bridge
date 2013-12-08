@@ -1,4 +1,4 @@
-// Built on 2.1.203 
+// Built on 2.1.209 
 // Should not be modified
 // RF24 
 
@@ -65,21 +65,26 @@ void writeRF24payload(uint8_t _pipe, char *payload, uint8_t bytes)
     radio.openWritingPipe(pipes[_pipe]);
     
 #ifdef DEBRF24
-         printf(">> Opened pipe#: %i Add: %#x \r\n",_pipe,pipes[_pipe]);
-  #ifdef DEBRF24RADIO
+        printf(">> Opened pipe#: %i Add: %#x \r\n",_pipe,pipes[_pipe]);
         radio.printDetails();
-   #endif
+#endif // DEBRF24
+        
+  delay(5); // necessary when not printing details
+
       
-#endif
+
 
     // Take the time, and send it.  This will block until complete
  
 boolean writeSuccess =false;
 
          writeSuccess =  radio.write( payload, bytes );
-#ifdef DEBRF24RADIO
+         
+#ifdef DEBRF24
 Serial << "Write returned:" << writeSuccess << endl;
-#endif 
+#endif // DEBRF24
+
+ 
        // Now, continue listening
    
 

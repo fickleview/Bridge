@@ -2,7 +2,7 @@
 // MRMP Wireless and Serial Bridge development environment
 // c 2013-03  S. George Matthews   mrmp@fickleview.com
 
-#define kRelease "2.0.1.210"           // Used by MRMP to determine capabilities
+#define kRelease "2.0.1.208"           // Used by MRMP to determine capabilities
 #define BUILD_UNIX_TIME 1365184323     // Used for UNIX time sanity checks
 
 
@@ -18,7 +18,7 @@
 #include "MRMPfunctions.h"
 #include "MRMParrays.h"
 
-#include "MRMPmachinePackets.h"
+#include "MMRPmachinePackets.h"
 #include "EEPROM.h" 
 #include "MRMPfunctions.h"
 

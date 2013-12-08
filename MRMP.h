@@ -34,6 +34,8 @@
  
  // Optional feature Inclusions
     
+// #define FETCH_UNIX_TIME    // Only on Controllers, When set will fetch time from bridge at startup
+
 //#define SECURITY            // 1020 bytes - A means to authenticate user passcodes stored on EEPROM. MUST include EEPROM_RECORDS
     
 //#define WATCHDOG             //  740 bytes - A means to reset if an external reset is not received periodically. Else any athentication request succeeds

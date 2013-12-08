@@ -46,9 +46,9 @@ void setup()
 for (int i=1; i<=kNumberOfPipes; ++i)
 {
 radio.openReadingPipe(i,pipes[i-1]); //B92
-  #ifdef DEBRF24RADIO
+ // #ifdef DEBRF24RADIO
   Serial << "Listening on pipe:" << i << endl; 
-  #endif
+ // #endif
   
 }
 
