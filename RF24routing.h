@@ -25,9 +25,9 @@ Port '0' is by default the local serial port.
  
 #define RF24_TX_RX_PIPE_ADD_X 0x0101010101LL
 
-#define RF24_TX_RX_PIPE_ADD_A 0x010101010aLL  // Boat
-#define RF24_TX_RX_PIPE_ADD_B 0x010101010bLL  // Irrigate
-#define RF24_TX_RX_PIPE_ADD_C 0x010101010cLL  // LED lights
+#define RF24_TX_RX_PIPE_ADD_A 0x010101010aLL  // 
+#define RF24_TX_RX_PIPE_ADD_B 0x010101010bLL  // 
+#define RF24_TX_RX_PIPE_ADD_C 0x010101010cLL  // 
 
 
 

@@ -20,13 +20,13 @@
 
 //#define DEBUGREC      // Receive debug A few debug printouts use printf
 //#define DEBRF24       // Wireless degugging A few debug printouts use printf
-//#define DEBRF24RADIO  // Use in addition to basic DEBRF24 for more details, A few debug printouts use printf
+#define DEBRF24RADIO  // Use in addition to basic DEBRF24 for more details, A few debug printouts use printf
 
 //#define DEBUG_MACHINE_PACKETS // A few debug printouts use printf
 
 //#define DEBUG_UNIX     // UNIX time updates, A few debug printouts use printf
 
-//#define DEBUG_USING_PRINTF    // 800 bytes - A few debug printouts use printf
+#define DEBUG_USING_PRINTF    // 800 bytes - A few debug printouts use printf
   #ifdef DEBUG_USING_PRINTF 
      #include "printf.h"      // Serial.print alternative
 #endif                 
