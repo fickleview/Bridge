@@ -593,7 +593,7 @@ void parseRecHeader()
     parm1 = 0;
     parm2 = 0;
     parm3 = 0;
-
+    parm4 = 0;
 
     parm1 = strtol(parameterPointerArray[1],'\0',10);
   
@@ -604,6 +604,11 @@ void parseRecHeader()
           if(commandParameters>=3)
           {
             parm3 = strtol(parameterPointerArray[3],'\0',10);
+            
+             if(commandParameters>=4)
+          {
+            parm4 = strtol(parameterPointerArray[4],'\0',10);
+          }
           }
     }
   
@@ -619,7 +624,9 @@ Serial.print(parm1);
 Serial.print(" parm2:");
 Serial.print(parm2);
 Serial.print(" parm3 ");
-Serial.println(parm3);
+Serial.print(parm3);
+Serial.print(" parm4 ");
+Serial.println(parm4);
 
 #endif
   
@@ -677,7 +684,29 @@ void executeCommand()  // Commands built by processCommand will be executed
         }
         break; //Get data from arrays
 
+    case 'N':  // Notifications
+    
+    if(group =='a' || group == 'm' || (MRMP_TagInStr == MACHINE_TAG) || WithinTrackingTagRange(tagrmp)) // only admin or moderator group may write
+        {
+        
+            if(commandParameters==4 )
+            {
+             userHandleNotification();          
+            }
+            else
+            {
+             RpacketReply('n',0); // Other format not currently accepted
+            }      
+        }
+         else
+        {
+          RpacketReply('A',group);
+        }
 
+        break; // Notifications
+     
+ 
+  
      case 'P':  // Put data into array
 
         if(group =='a' || group == 'm' || (MRMP_TagInStr == MACHINE_TAG) || WithinTrackingTagRange(tagrmp)) // only admin or moderator group maywrite
@@ -867,6 +896,7 @@ void executeCommand()  // Commands built by processCommand will be executed
           //  Serial.println(970); // Debug
              #ifdef EEPROM_RECORDS        
                RecordReadEEPROMtoString(parm2);
+              // RecordReadEEPROMtoNotify(parm2); // Testing Notify format
              #else
                RpacketReply('N',parm2); // EEPROM records Not implemented
              #endif
@@ -890,17 +920,7 @@ void executeCommand()  // Commands built by processCommand will be executed
           // Serial.println(972); // Debug
           
          #ifdef EEPROM_RECORDS 
-              int p;
-              p  = RecordReadPointer();  // Points to the next record to write.
-    
-              p = p - RECORD_LENGTH;  // Go back one record.
-                  if (p < RECORD_FIRST)  // Is it wrapping?
-                  {
-                    p = RECORD_LAST; 
-                  }
-              p = (p - RECORD_FIRST) / RECORD_LENGTH;
-    
-              RpacketReply('0',p);        
+              RpacketReply('0',RecordLastEEPROMwritten());        
               
          #else
           RpacketReply('N',0); // EEPROM records Not implemented
@@ -954,7 +974,7 @@ void executeCommand()  // Commands built by processCommand will be executed
     group = SecurityValidatePass(user);
 
     #ifdef DEBUG
-    printf(" Authenticated... User: %i  Group: %c",user,group);  // Dbug
+    Serial << (" Authenticated... User: %i  Group: %c",user,group) << endl;  // Dbug
     #endif
     
     if(group)
@@ -1014,7 +1034,7 @@ void processSerial()
            
             
              #ifdef DEBUGREC
-             printf(" Serial Packet overrflow \n\r");
+             Serial << (" Serial Packet overrflow \n\r");
              #endif
              
             }
@@ -1041,7 +1061,7 @@ void processSerial()
 void getAvailableSerial()   // Check if any bytes are arriving on the serial ports
 {
     //  #ifdef DEBRF24
-    //   printf(" P=%c \n\r",processing);
+    //   Serial << (" P=%c \n\r",processing);
     //   delay(200);
     //   #endif
        
@@ -1079,7 +1099,7 @@ char elementInRouteTable(char _Dev)
      for(unsigned int _b=0; _b<sizeof(routeTable)-1; _b++)      // the table is comma delimited char pairs
      {
        #ifdef DEBUGREC
-           printf(" >< Route table size:%i Look for:%c Index:%i  \n\r",sizeof(routeTable),_Dev,_b);
+           Serial << " >< Route table size: " << sizeof(routeTable) << " Look for: " << _Dev << " Index: " <<  _b << endl;
        #endif
        
        if(_Dev == routeTable[_b])                // Scan for matching Controller toDev character
@@ -1113,7 +1133,7 @@ void parseRecPacket() // Rather than process the packet a char at a time, proves
 {
      
   #ifdef DEBUGREC
-       printf("Parsing: %s\n\r",MRMPRecPacketBuffer);
+       Serial << "Parsing: " << MRMPRecPacketBuffer << endl;
    #endif
    char _priorTag = tagrmp;
    
@@ -1131,14 +1151,14 @@ void parseRecPacket() // Rather than process the packet a char at a time, proves
       //MRMPSendByteCount=0;
       
        #ifdef DEBUGREC
-       printf("Routed To: %c MRMPRecPacketBuffer: %s\n\r",toDev,MRMPRecPacketBuffer);
+       Serial << "Routed To: " << toDev << " MRMPRecPacketBuffer: " << MRMPRecPacketBuffer << endl;
        #endif
    }
    else  // == THIS_DEV
    {
      //B60 
             #ifdef DEBUGREC
-              printf("Handle it: %s\r\n",MRMPRecPacketBuffer);
+              Serial << "Handle it: " << MRMPRecPacketBuffer << endl;
             #endif
      
     
@@ -1175,7 +1195,7 @@ void parseRecPacket() // Rather than process the packet a char at a time, proves
               {
                 //B61
             #ifdef DEBUGREC
-              printf("Execute command: %s\r\n",MRMPRecPacketBuffer);
+              Serial << "Execute command: " << MRMPRecPacketBuffer << endl;
             #endif
             
             executeCommand();
@@ -1451,7 +1471,7 @@ void watchDog()  // Wake the dog?
  
 void ping(char _dest, byte _HighLow)  //
 {  
-  sendMachinePacketTo('A',_dest,'R','S','2',PING_PIN,_HighLow,0,'0');
+  sendMachinePacketTo('A',_dest,'R','S','2',PING_PIN,_HighLow,0,0,'0');
 }
 
 
@@ -1551,7 +1571,7 @@ void mainTasks()
    if (checkRF24forPayload()) // Also process received payload
    {
      #ifdef DEBRF24
-     printf("Processed payload: %s\n\r",receive_payload);
+     Serial << "Processed payload: " << receive_payload << endl;
      #endif
    }
    #endif

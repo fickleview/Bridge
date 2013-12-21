@@ -2,9 +2,12 @@
 // Should not be modified
 
 // EEPROM feature directives
+// Revised 2013-12-13 to include RECORD_LAST_NOTIFY
+
 
  #ifdef SECURITY
     #define  EEPROM_RECORDS   // 900 bytes - Required -  A means to read/write EEPROM records. 
+
     #include <EEPROM.h> 
   #endif
 
@@ -103,6 +106,7 @@ void WipeEEPROMrecordsOnly()
  RECORD_LENGTH = 9
  RECORDS      = 14
  RECORD_FIRST = 385  ( 511 - (14 * 9)) = 385th byte )
+
  
  ATMEGA328 will use upper 512 bytes
  RECORD_FIRST = 510  ( 1023 - (57 * 9)) = 510th byte )
@@ -111,7 +115,7 @@ void WipeEEPROMrecordsOnly()
  
  ATMEGA328
  RECORD_POINTER = RECORD_FIRST - 2  Contains 510, 519, 528 etc to 1014
- 
+ RECORD_LAST_NOTIFY = RECORD_FIRST - 4  Contains last successfully notify record 
  
  RECORD_EVENT = RECORD_POINTER + RECORD_FIRST     + 0
  RECORD_ITEM = RECORD_POINTER + RECORD_FIRST      + 1
@@ -152,6 +156,20 @@ int RecordReadPointer()
 }
 
 
+int RecordReadLastNotify()
+{
+  // Get the last notification sent
+
+  //MSB
+  pointerMSBLSB = EEPROM.read(RECORD_LAST_NOTIFY);
+  pointer = pointerMSBLSB << 8;
+
+  // LSB next
+  pointerMSBLSB = EEPROM.read(RECORD_LAST_NOTIFY + 1);
+  pointer = pointer + pointerMSBLSB;
+
+  return pointer;
+}
 
 
 // bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
@@ -350,6 +368,10 @@ void RecordReadEEPROM(int record)
 {
 
   record = RECORD_FIRST + (record * RECORD_LENGTH);
+  if(record > RECORD_LAST)
+  {
+    record = RECORD_FIRST; // Rollover
+  }
   record = constrain(record,RECORD_FIRST,RECORD_LAST);
 
 
@@ -400,7 +422,7 @@ void RecordReadEEPROM(int record)
 
 #ifdef EEPROM_RECORDS
 
-// Sends four reply packets per record
+// Sends four reply fields per record (byte, unsigned int, unsigned int,  long)
 //B66
 void RecordReadEEPROMtoString(int _record)
 {
@@ -413,8 +435,7 @@ void RecordReadEEPROMtoString(int _record)
 
   packetHeader('E', 'R',fromDev,toDev,_reply);
  
-    *MRMPPacketBufferPointer = '7';
-   
+    *MRMPPacketBufferPointer = '7';  
     MRMPPacketBufferPointer++;
 
    *MRMPPacketBufferPointer = ',';
@@ -427,12 +448,44 @@ void RecordReadEEPROMtoString(int _record)
     RpacketData(parm1);  
     RpacketData(_record);
 
-  // Change record number to EEPROM address
+    RecordReadEEPROMtoStringFooter(_record);
+  
+}
+
+// Notifications
+void RecordReadEEPROMtoNotify(int _record)
+{
+    // Change record number to EEPROM address
   _record = RECORD_FIRST + (_record * RECORD_LENGTH);
+  if(_record > RECORD_LAST)
+  {
+    _record = RECORD_FIRST; // Rollover
+  }
   _record = constrain(_record,RECORD_FIRST,RECORD_LAST);
 
+int  _parm1 = EEPROM.read(_record);
+int  _parm2 = RecordReadEPROMint(_record + RECORD_ITEM);
+int  _parm3 = RecordReadEPROMint(_record + RECORD_VALUE);
+long _parm4 = RecordReadEPROMlong(_record + RECORD_UNIX_TIME);
 
-  // Record  ============================
+ sendMachinePacketTo('B', NOTIFY_DEV, 'R', 'N', '4', _parm1 , _parm2, _parm3, _parm4, '0');  // 'B' is tracked and reply recorded
+ 
+
+}
+
+
+
+void RecordReadEEPROMtoStringFooter(int _record)
+{
+  // Change record number to EEPROM address
+  _record = RECORD_FIRST + (_record * RECORD_LENGTH);
+  if(_record > RECORD_LAST)
+  {
+    _record = RECORD_FIRST; // Rollover
+  }
+  _record = constrain(_record,RECORD_FIRST,RECORD_LAST);
+
+  // Record type/notify level ============================
   RpacketData(EEPROM.read(_record));
 
 
@@ -453,6 +506,68 @@ void RecordReadEEPROMtoString(int _record)
 
 }
 
+
+
+int RecordLastEEPROMwritten()  // starting with 0 
+{
+     int p;
+              p  = RecordReadPointer();  // Points to the next record to write.
+    
+              p = p - RECORD_LENGTH;  // Go back one record.
+                  if (p < RECORD_FIRST)  // Is it wrapping?
+                  {
+                    p = RECORD_LAST; 
+                  }
+              p = (p - RECORD_FIRST) / RECORD_LENGTH;
+              return p;
+}
+
+void RecordWriteLastNotify(int _p)
+{
+  
+  msblsb = _p >> 8; 
+  EEPROM.write(RECORD_LAST_NOTIFY,msblsb);
+
+  // LSB next
+  msblsb = _p & B11111111; 
+  EEPROM.write(RECORD_LAST_NOTIFY + 1,msblsb);
+}
+
+int RecordReadLastNotifyNext(int _p) // starting with 0 handles wrapping
+{
+        _p = (_p * RECORD_LENGTH) + RECORD_FIRST;
+    
+                  if (_p > RECORD_LAST)  // Is it wrapping?
+                  {
+                    _p = RECORD_FIRST; 
+                  }
+                  
+              _p = (_p - RECORD_FIRST) / RECORD_LENGTH;
+              return _p;
+}
+
+  // check re-send records that have not been successfully sent 
+  void PollRecordReadEEPROMtoNotify()
+  {
+    #ifdef DEBUG_EEPROM_RECORDS
+
+          Serial << endl << endl << "RecordLastEEPROMwritten: " << RecordLastEEPROMwritten() << " RecordReadLastNotify: " << RecordReadLastNotify() << endl;
+          Serial << "NOTIFY_DEV: " << NOTIFY_DEV << " THIS_DEV: " << THIS_DEV << endl << endl;
+
+    #endif //  DEBUG_EEPROM_RECORDS
+
+    if((RecordLastEEPROMwritten() != RecordReadLastNotify()) && (NOTIFY_DEV != THIS_DEV)) // Records not sent & not to self.
+    {     
+      RecordReadEEPROMtoNotify(RecordReadLastNotifyNext(1));           
+    }
+    
+  }
+  
+ void incrementRecordWriteLastNotify() // Records are stored starting with 0
+  {
+  RecordWriteLastNotify(RecordReadLastNotifyNext(1)); // starting with 0 handles wrapping
+  }
+  
 #endif //EEPROM_RECORDS
 
 

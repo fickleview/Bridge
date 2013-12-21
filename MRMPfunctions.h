@@ -4,6 +4,7 @@
 #ifndef kMRMPfunctions_h
 #define kMRMPfunctions_h
 
+  
 //Prototypes
 
 extern void RpacketData(long);
@@ -69,6 +70,7 @@ int fieldType = 0;           // 100, 200, 300 to 900 byte 7 + 00
 long parm1;               // First  MRMP Parameter converted long
 long parm2;               // Second MRMP Parameter converted long
 long parm3;               // Third  MRMP Parameter converted long
+long parm4;               // Fourth MRMP Parameter converted long
 
 char errorMRMP = '?';
 char inByte = 0;          // Byte read from serial port

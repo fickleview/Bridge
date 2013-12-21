@@ -4,6 +4,7 @@
 #ifndef TEMPERATURE_H
 #define TEMPERATURE_H
 
+  
 #define MaxTempError 2000       // Used to set upper and lower before error value passes
 #define MinTempError -500
 #define TempError  -32000       // Used by functions to determine if sensor shorted or open

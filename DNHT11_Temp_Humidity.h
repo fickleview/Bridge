@@ -4,6 +4,7 @@
 #ifndef DHT11_CORE
 #define DHT11_CORE
 
+
 #define DHT11PIN 2
   
 extern void printTempHumidity();

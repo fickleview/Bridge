@@ -8,28 +8,30 @@
 // EEPROM target.
 #define ATMEGA328     // This one
 //#define  ATMEGA168  // or this one. Not both.
-// Be sure to pick a Tools > Board > that matches the Atmega selected above.
+// Be sure to  pick a Tools > Board > that matches the Atmega selected above.
 // Otherwise the smaller ATMEGA168
 // These directives simply allow for more EEPROM records  (14 vs 56 records)
 // and more code  (14k vs 30k)
 
+ 
 #define DEBUG_EEPROM_ARRAYS   // Prints arrays at startup
-#define DEBUG_EEPROM_RECORDS  // Prints records at startup
+//#define DEBUG_EEPROM_RECORDS  // Prints records at startup
+
+
+ #define  EEPROM_RECORDS   // 900 bytes - Required -  A means to read/write EEPROM records. 
+
+
 
 //#define DEBUGAUTH     // Authentication   requires DEBUG
 
-//#define DEBUGREC      // Receive debug A few debug printouts use printf
-//#define DEBRF24       // Wireless degugging A few debug printouts use printf
-#define DEBRF24RADIO  // Use in addition to basic DEBRF24 for more details, A few debug printouts use printf
+//#define DEBUGREC      // Receive debug A few debug printouts
+//#define DEBRF24       // Wireless degugging A few debug printouts 
+//#define DEBRF24RADIO  // Use in addition to basic DEBRF24 for more details, A few debug printouts 
 
-//#define DEBUG_MACHINE_PACKETS // A few debug printouts use printf
+#define DEBUG_MACHINE_PACKETS // A few debug printouts
 
-//#define DEBUG_UNIX     // UNIX time updates, A few debug printouts use printf
 
-#define DEBUG_USING_PRINTF    // 800 bytes - A few debug printouts use printf
-  #ifdef DEBUG_USING_PRINTF 
-     #include "printf.h"      // Serial.print alternative
-#endif                 
+//#define DEBUG_UNIX     // UNIX time updates, A few debug printouts              
  
  
  // Optional feature Inclusions
@@ -56,6 +58,7 @@
 #define DIGITAL_PIN_MAX 12
 
 #define DHT11_TEMP_HUMD      // 575 Bytes - A means to read a DHT11 temperature and humidity sensor
+
 
 // Global define
 

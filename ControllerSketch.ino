@@ -20,6 +20,48 @@ void userCommand(char _command ) // a means to decouple the supplied command set
     
     
     
+void userHandleNotification() // Handle notification packet sent by remote controller
+{
+     RpacketReply('0',reply); // Will confirm receipt of notification and handleTrackingTag will be called by remote controller.
+
+    
+#ifdef DEBUG_MACHINE_PACKETS  
+Serial << endl << "Replied to notification and got... " << endl << " commandParameters:" << commandParameters << " parm1:" << parm1 << " parm2:" << parm2 << " parm3 " << parm3 << " parm4 " << parm4 << endl;
+#endif // DEBUG_MACHINE_PACKETS 
+
+
+              switch (parm1)  // Parameter 1 used to set notification levels
+              {
+                case 'a':  // High level alert audio and visual
+                #ifdef DEBUG_MACHINE_PACKETS
+                Serial << "Audio and Visual notification" << endl;
+                #endif // DEBUG_MACHINE_PACKETS              
+                break;
+                
+                case 'v':  // Med level alert  visual
+                #ifdef DEBUG_MACHINE_PACKETS
+                Serial << "Visual notification" << endl;
+                #endif // DEBUG_MACHINE_PACKETS
+                break;
+                
+                case 't':  // Low level alert text
+                #ifdef DEBUG_MACHINE_PACKETS
+                Serial << "Text notification" << endl;
+                #endif // DEBUG_MACHINE_PACKETS
+                break;
+                
+                default:
+                #ifdef DEBUG_MACHINE_PACKETS
+               Serial << "Default notification" << endl;
+               #endif // DEBUG_MACHINE_PACKETS
+                 break;
+              }
+               Serial <<  MRMPRecPacketBuffer << endl; // Always send the received notification to serial port for processing
+               
+}  // userHandleNotification
+
+
+    
 // Any task you have in your sketck may be executed periodically in these functions
 // add to but avoid modifying...
 void task10xS()
@@ -32,8 +74,12 @@ void taskEverySecond()
 {
 
   
-  if(!(*absolute_time_t501 % 10))  // AN example of how to execute a function periodically
+  if(!(*absolute_time_t501 % 10))  // every ten seconds
   {
+   if(NOTIFY_DEV != THIS_DEV)
+   {
+    PollRecordReadEEPROMtoNotify();
+   }
   
   }
   
@@ -127,7 +173,7 @@ void taskEveryDay()
  
  
  
-// Modify this to handle your machine tags
+// Modify this to handle your machine tags replied to by remote controller
 // ASCII_FIRST_TRACKING_TAG to ASCII_LAST_TRACKING_TAG range set on MRMPmachinePackets.h as 'A' to 'E'
 // Larger range uses more memory
 
@@ -231,6 +277,14 @@ void handleTrackingTag()
      #ifdef DEBUG_MACHINE_PACKETS
      Serial << "Tracking tag case:" << MRMP_TagInStr << endl;
      #endif
+      if(MRMP_ErrorCodeInStr == '0')  // Increment
+                 {
+                  #ifdef DEBUG_MACHINE_PACKETS
+                 Serial << "Increment EEPROM last:" << RecordReadLastNotify() << endl;
+                 #endif
+                 incrementRecordWriteLastNotify();
+                 }
+     
     break;  // 'B'
     
     
@@ -272,14 +326,14 @@ void handleTrackingTag()
 
 
 // Sending machine packets...
-// sendMachinePacketTo( char _tagrmp, char _toDev, char _type, char _command, char _parameters, int _parameter1, long _parameter2,long _parameter3, char _EEPROM)
+// sendMachinePacketTo( char _tagrmp, char _toDev, char _type, char _command, char _parameters, int _parameter1, long _parameter2,long _parameter3, long _parameter4,char _EEPROM)
 
 // How UNIX time is fetched. 'A' is the machine packet tag and the packet is time stamped and must be received before expiry. 
 // TRACKING_TAG_EXIPRY_mS is set to 1.5 seconds. Even though packets are 2mS per hop.
 
 // A sent packet need not be tagged and tracked, but this method avoids setting up custom code to manage replies.
 
-// sendMachinePacketTo('A', 'X', 'R', 'G', '1', 501, 0, 0, '0');  // That is the actual code used to fetch the UNIX time from 'X'
+// sendMachinePacketTo('A', 'X', 'R', 'G', '1', 501, 0, 0, 0, 0, '0');  // That is the actual code used to fetch the UNIX time from 'X'
 
 // If successful, it triggers additional machine packet request for the date and day
 

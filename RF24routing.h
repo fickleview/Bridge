@@ -1,6 +1,8 @@
 // Built on 2.1.207 
 // Modify for your sketch
 
+
+  
 //RF24 Routing table
 /*
 Writing pipes for packet Routing
@@ -34,6 +36,7 @@ Port '0' is by default the local serial port.
 // **************** Sample congigurations 1 *********************
 //       ***********************************************
 
+#define NOTIFY_DEV      'X'      // where to send notifications
 #define UNIXTIME_ON_DEV 'X'      // where to fetch the UNIX time at startup
                                  // the UNIX time is updated on UNIXTIME_ON_DEV by a script (perl) on the briged computer
 

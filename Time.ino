@@ -207,7 +207,7 @@ void tickTock()
 //B83
  void sendUNIXtimeQuery(char _tag, int _field)
 {
-    sendMachinePacketTo(_tag, UNIXTIME_ON_DEV, 'R', 'G', '1', _field, 0, 0, '0');  // 'A' is tracked and reply recorded
+    sendMachinePacketTo(_tag, UNIXTIME_ON_DEV, 'R', 'G', '1', _field, 0, 0, 0, '0');  // 'A' is tracked and reply recorded
      
 }
 

@@ -66,7 +66,7 @@ boolean WithinTrackingTagRange(char _trackingTag)
 
 
 
-void sendMachinePacketTo( char _tagrmp, char _toDev, char _type, char _command, char _parameters, int _parameter1, long _parameter2,long _parameter3, char _EEPROM)
+void sendMachinePacketTo( char _tagrmp, char _toDev, char _type, char _command, char _parameters, int _parameter1, long _parameter2,long _parameter3,long _parameter4, char _EEPROM)
 {  
   
   #ifdef DEBUG_MACHINE_PACKETS
@@ -82,17 +82,20 @@ void sendMachinePacketTo( char _tagrmp, char _toDev, char _type, char _command, 
   
   #endif // DEBUG_MACHINE_PACKETS
   
+  stampTrackingTagEpires_mS(_tagrmp, TRACKING_TAG_EXIPRY_mS);
+
   tagrmp = _tagrmp;
   
   packetHeader(_command, _type,_toDev,THIS_DEV,'r'); 
   
-  MRMPSendPacketBuffer[MRMP_REPLY_INDEX] = MACHINE_TAG;  // by default it it 'r'
+  MRMPSendPacketBuffer[MRMP_REPLY_INDEX] = MACHINE_TAG;  // by default it is 'r'
   
 
    *MRMPPacketBufferPointer = _parameters;
     MRMPPacketBufferPointer++;
     
     RpacketData(_parameter1);
+    
         if(_parameters >= '2')
         {
         RpacketData(_parameter2);
@@ -100,6 +103,11 @@ void sendMachinePacketTo( char _tagrmp, char _toDev, char _type, char _command, 
              if(_parameters >= '3')
              {
               RpacketData(_parameter3);
+                if(_parameters >= '4')
+               {
+                RpacketData(_parameter4);
+               }
+             
              }
         
         }
@@ -118,7 +126,7 @@ void sendMachinePacketTo( char _tagrmp, char _toDev, char _type, char _command, 
     PacketFooterAndSend();
     
        #ifdef DEBUG_MACHINE_PACKETS
-       printf("Machine packet To: %c MRMPSendPacketBuffer: %s\n\r",_toDev,MRMPSendPacketBuffer);
+       Serial << "Machine packet To: " << _toDev << " MRMPSendPacketBuffer: " << MRMPSendPacketBuffer << endl;
        #endif
 }
 

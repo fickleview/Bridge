@@ -15,9 +15,6 @@ void setup()
   SerialBridge1.begin(57600);
 #endif
 
-#ifdef DEBUG_USING_PRINTF 
-   printf_begin();
-#endif
    
    
    Serial << endl << "THIS_DEV:" << THIS_DEV << " Release:" << kRelease  << endl;
@@ -58,9 +55,9 @@ radio.startListening();
   // Dump the configuration of the rf unit for debugging
   //
 
-  #ifdef DEBRF24RADIO
+
      radio.printDetails();
-  #endif
+ 
   
 
 #endif  // WIRELESS_RF24
@@ -114,9 +111,20 @@ arrayLoadFromEEPROM3nn(0,2); // First and Last record,      TZ[300],     Weekday
   {
     RecordReadEEPROM(i);
   }
-#endif
+
+#endif // DEBUG_EEPROM_RECORDS
 
 
+#ifdef EEPROM_RECORDS
+// Reset the notification pointer to avoid dumping all records at startup
+   if(abs(RecordReadLastNotify() - RecordLastEEPROMwritten()) > 10)
+  {
+    RecordWriteLastNotify(RecordLastEEPROMwritten());
+  }
+  
+//  RecordWriteLastNotify(1);  // Test
+  
+#endif // EEPROM_RECORDS
 
 
 

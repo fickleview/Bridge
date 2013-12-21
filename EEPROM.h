@@ -4,6 +4,10 @@
 #ifndef EEPROM_H
 #define EEPROM_H
 
+
+ 
+
+ 
 // declarations
 
 #define RECORD_LENGTH 9
@@ -14,12 +18,14 @@
 #define RECORD_LAST      1014
 #define RECORD_POINTER    508  
 #define EEPROM_LAST_BYTE 1023
+#define RECORD_LAST_NOTIFY 506
 
 #else
 #define RECORD_FIRST      385
 #define RECORD_LAST       502
 #define RECORD_POINTER    383
 #define EEPROM_LAST_BYTE  511
+#define RECORD_LAST_NOTIFY 381
 
 #endif 
 
@@ -44,6 +50,12 @@ extern int RecordReadPointer();
 extern void RecordWriteEEPROM(byte, unsigned int, unsigned int,  long);
 extern void RecordReadEEPROM(int);
 extern void RecordReadEEPROMtoString(int);
+extern void RecordReadEEPROMtoNotify(int);
+extern  int RecordLastEEPROMwritten();
+extern  int RecordLastEEPROMwritten();
+extern void RecordWriteLastNotify(int);
+extern void PollRecordReadEEPROMtoNotify();
+extern void incrementRecordWriteLastNotify();
 
 //EEPROM arrays
 extern char arrayToEEPROM2nn(int, byte);
@@ -57,5 +69,6 @@ extern long arrayFromEEPROM5nn(int);
 extern void arrayLoadFromEEPROM2nn(int, int);
 extern void arrayLoadFromEEPROM3nn(int, int);
 extern void arrayLoadFromEEPROM5nn(int, int);
+
 
 #endif // EEPROM_HEADER_H

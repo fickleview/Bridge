@@ -65,7 +65,8 @@ void writeRF24payload(uint8_t _pipe, char *payload, uint8_t bytes)
     radio.openWritingPipe(pipes[_pipe]);
     
 #ifdef DEBRF24
-        printf(">> Opened pipe#: %i Add: %#x \r\n",_pipe,pipes[_pipe]);
+        long _add = pipes[_pipe];
+        Serial << ">> Opened pipe#: " <<  _pipe << " Add: " << _add << endl;
         radio.printDetails();
 #endif // DEBRF24
         
@@ -134,7 +135,7 @@ void writePacketToPipe( char *_buffer)  // packet buffer can be mutiples of 32 m
         MRMPnextBytePointer = _buffer +((_count/32)-chunks)*32;
     
       #ifdef DEBRF24
-       printf("#> Pipe int:%i Chunks:%i  Length:%i  Current chunk:%i\n\r",pipe_num,chunks, len, ((_count/32)-chunks)*32);
+       Serial << "#> Pipe int:" << pipe_num << " Chunks:" << chunks <<  " Length:" << len <<  " Current chunk:" << MRMPnextBytePointer-_buffer << endl;
        #endif
     
     
@@ -146,7 +147,7 @@ void writePacketToPipe( char *_buffer)  // packet buffer can be mutiples of 32 m
     
   
        #ifdef DEBRF24
-       printf("  *>> %i  > %s\n\r", len,MRMPnextBytePointer);
+       Serial << "  *>> " << len << " >" << MRMPnextBytePointer << endl;
        
        #endif
        
@@ -232,7 +233,7 @@ uint8_t checkRF24forPayload()
 	receive_payload[len] = 0;
 
 #ifdef DEBRF24
-  printf("#< Received:%s \n\r",receive_payload);
+  Serial << "#< Received:" << receive_payload << endl;
 #endif
        
         processing = 'R';
@@ -245,14 +246,14 @@ uint8_t checkRF24forPayload()
             MRMPRecByteCount=MRMPRecByteCount+len;
             
              #ifdef DEBUGREC
-             printf("  MRMPRecByteCount: %i End: %c MRMPRecPacketBuffer:  %s\n\r",MRMPRecByteCount,MRMPRecPacketBuffer[strlen(MRMPRecPacketBuffer)-1],MRMPRecPacketBuffer);
+             Serial << "  MRMPRecByteCount: " << MRMPRecByteCount << " End: " << MRMPRecPacketBuffer[strlen(MRMPRecPacketBuffer)-1] << " MRMPRecPacketBuffer: " << MRMPRecPacketBuffer << endl;
              #endif
        
        
             if((MRMPRecPacketBuffer[strlen(MRMPRecPacketBuffer)-1]) == EOP_CHAR)
              {
                 #ifdef DEBUGREC
-                printf("  Complete packet: %s \n\r",MRMPRecPacketBuffer);
+                Serial << "  Complete packet: " << MRMPRecPacketBuffer << endl;
                 #endif
              
               MRMPRecByteCount=0;
@@ -266,7 +267,7 @@ uint8_t checkRF24forPayload()
              {
             
              #ifdef DEBUGREC
-             printf("  Incomplete packet: %s \n\r",MRMPRecPacketBuffer);
+             Serial << "  Incomplete packet: " << MRMPRecPacketBuffer << endl;
              #endif
              }
              
@@ -279,7 +280,7 @@ uint8_t checkRF24forPayload()
            
             
              #ifdef DEBUGREC
-             printf("  RF24 Packet overrflow \n\r");
+             Serial << "  RF24 Packet overrflow" << endl;
              #endif
             
          }
