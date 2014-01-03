@@ -14,7 +14,7 @@
 // and more code  (14k vs 30k)
 
  
-#define DEBUG_EEPROM_ARRAYS   // Prints arrays at startup
+//#define DEBUG_EEPROM_ARRAYS   // Prints arrays at startup
 //#define DEBUG_EEPROM_RECORDS  // Prints records at startup
 
 

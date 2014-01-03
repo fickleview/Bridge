@@ -26,7 +26,7 @@ void userHandleNotification() // Handle notification packet sent by remote contr
 
     
 #ifdef DEBUG_MACHINE_PACKETS  
-Serial << endl << "Replied to notification and got... " << endl << " commandParameters:" << commandParameters << " parm1:" << parm1 << " parm2:" << parm2 << " parm3 " << parm3 << " parm4 " << parm4 << endl;
+Serial << endl << F("Replied to notification and got... ") << endl << F(" commandParameters:") << commandParameters << F(" parm1:") << parm1 << F(" parm2:") << parm2 << F(" parm3 ") << parm3 << F(" parm4 ") << parm4 << endl;
 #endif // DEBUG_MACHINE_PACKETS 
 
 
@@ -34,25 +34,25 @@ Serial << endl << "Replied to notification and got... " << endl << " commandPara
               {
                 case 'a':  // High level alert audio and visual
                 #ifdef DEBUG_MACHINE_PACKETS
-                Serial << "Audio and Visual notification" << endl;
+                Serial << F("Audio and Visual notification") << endl;
                 #endif // DEBUG_MACHINE_PACKETS              
                 break;
                 
                 case 'v':  // Med level alert  visual
                 #ifdef DEBUG_MACHINE_PACKETS
-                Serial << "Visual notification" << endl;
+                Serial << F("Visual notification") << endl;
                 #endif // DEBUG_MACHINE_PACKETS
                 break;
                 
                 case 't':  // Low level alert text
                 #ifdef DEBUG_MACHINE_PACKETS
-                Serial << "Text notification" << endl;
+                Serial << F("Text notification") << endl;
                 #endif // DEBUG_MACHINE_PACKETS
                 break;
                 
                 default:
                 #ifdef DEBUG_MACHINE_PACKETS
-               Serial << "Default notification" << endl;
+               Serial << F("Default notification") << endl;
                #endif // DEBUG_MACHINE_PACKETS
                  break;
               }
@@ -125,7 +125,7 @@ if(hourIs() == 4 && minuteIs() == 3) // The following minute. Too much blocking 
    
           
    printTime();    
-   Serial << "Free mem:" << freeRam() << endl;
+   Serial << F("Free mem:") << freeRam() << endl;
    
    
    #ifdef WATCHDOG
@@ -195,7 +195,7 @@ void handleTrackingTag()
                  if(MRMP_ErrorCodeInStr == '0' && parm3 > BUILD_UNIX_TIME)
                  {
                  #ifdef DEBUG_MACHINE_PACKETS
-                 Serial <<  "Update *absolute_time_t501 case:" << MRMP_TagInStr << " Field:" << parm2 << " Value:" << parm3 << endl;
+                 Serial <<  F("Update *absolute_time_t501 case:") << MRMP_TagInStr << F(" Field:") << parm2 << F(" Value:") << parm3 << endl;
                  #endif
                  
                    *absolute_time_t501   = parm3; 
@@ -208,7 +208,7 @@ void handleTrackingTag()
                  #ifdef DEBUG_MACHINE_PACKETS
                  else
                  {
-                 Serial <<  "ERROR Update *absolute_time_t501 case:" << MRMP_TagInStr << " Field:" << parm2 << " Value:" << parm3 << endl;
+                 Serial << F("ERROR Update *absolute_time_t501 case:") << MRMP_TagInStr << F(" Field:") << parm2 << F(" Value:") << parm3 << endl;
                  }
                  #endif
                  
@@ -218,12 +218,12 @@ void handleTrackingTag()
                  if(MRMP_ErrorCodeInStr == '0')
                  {
                    #ifdef DEBUG_MACHINE_PACKETS
-                   Serial << "Update *TZ300 case:" << MRMP_TagInStr << " Field:" << parm2 << " Value:" << parm3 << endl;
+                   Serial << F("Update *TZ300 case:") << MRMP_TagInStr << F(" Field:") << parm2 << F(" Value:") << parm3 << endl;
                    #endif
                
                    *TZ300 =  parm3; 
                    
-                   Serial << timeJuliet() << "J" << endl;
+                   Serial << timeJuliet() << F("J") << endl;
  
                  }
              break; // 300
@@ -233,7 +233,7 @@ void handleTrackingTag()
                  if(MRMP_ErrorCodeInStr == '0')
                  {
                    #ifdef DEBUG_MACHINE_PACKETS
-                   Serial << "Update *WeekDay301 case:" << MRMP_TagInStr << " Field:" << parm2 << " Value:" << parm3 << endl;
+                   Serial << F("Update *WeekDay301 case:") << MRMP_TagInStr << F(" Field:") << parm2 << F(" Value:") << parm3 << endl;
                    #endif
                
                    *WeekDay301 =  parm3; 
@@ -246,7 +246,7 @@ void handleTrackingTag()
                   if(MRMP_ErrorCodeInStr == '0')
                   {          
                     #ifdef DEBUG_MACHINE_PACKETS
-                     Serial << "Update *Date302 case:" << MRMP_TagInStr << " Field:" << parm2 << " Value:" << parm3 << endl;
+                     Serial << F("Update *Date302 case:") << MRMP_TagInStr << F(" Field:") << parm2 << F(" Value:") << parm3 << endl;
                      #endif
       
                     *Date302 = parm3;    
@@ -259,7 +259,7 @@ void handleTrackingTag()
                   if(MRMP_ErrorCodeInStr == '0')
                   {          
                     #ifdef DEBUG_MACHINE_PACKETS
-                     Serial << "Ping:" << MRMP_TagInStr << " Field:" << parm2 << " Value:" << parm3 << endl;
+                     Serial << F("Ping:") << MRMP_TagInStr << F(" Field:") << parm2 << F(" Value:") << parm3 << endl;
                      #endif
       
                    handlePings();
@@ -275,12 +275,12 @@ void handleTrackingTag()
       
     case('B'):
      #ifdef DEBUG_MACHINE_PACKETS
-     Serial << "Tracking tag case:" << MRMP_TagInStr << endl;
+     Serial << F("Tracking tag case:") << MRMP_TagInStr << endl;
      #endif
       if(MRMP_ErrorCodeInStr == '0')  // Increment
                  {
                   #ifdef DEBUG_MACHINE_PACKETS
-                 Serial << "Increment EEPROM last:" << RecordReadLastNotify() << endl;
+                 Serial << F("Increment EEPROM last:") << RecordReadLastNotify() << endl;
                  #endif
                  incrementRecordWriteLastNotify();
                  }
@@ -292,7 +292,7 @@ void handleTrackingTag()
     
     case('C'):
      #ifdef DEBUG_MACHINE_PACKETS
-     Serial << "Tracking tag case:" << MRMP_TagInStr << endl;
+     Serial << F("Tracking tag case:") << MRMP_TagInStr << endl;
      #endif
     break;  // 'C'
     
@@ -302,7 +302,7 @@ void handleTrackingTag()
     case('D'):
     
      #ifdef DEBUG_MACHINE_PACKETS
-     Serial << "Tracking tag case:" << MRMP_TagInStr << endl;
+     Serial << F("Tracking tag case:") << MRMP_TagInStr << endl;
      #endif
      
     break;  //  'D'
@@ -313,7 +313,7 @@ void handleTrackingTag()
     case('E'):
     
          #ifdef DEBUG_MACHINE_PACKETS
-     Serial << "Tracking tag case:" << MRMP_TagInStr << endl;
+     Serial << F("Tracking tag case:") << MRMP_TagInStr << endl;
      #endif
      
     break;  // 'E'

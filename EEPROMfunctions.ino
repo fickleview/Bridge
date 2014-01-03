@@ -136,22 +136,21 @@ void WipeEEPROMrecordsOnly()
 
 
  #ifdef EEPROM_RECORDS 
+ 
+ int EEPROMReadWordAt(byte add)
+ {
+   byte MSByte = EEPROM.read(add);
+   byte LSByte = EEPROM.read(add + 1);
+   return word(MSByte,LSByte);
+
+ }
+ 
 int RecordReadPointer()
 {
   // Get the current pointer for the next write
 
-  //MSB
-  pointerMSBLSB = EEPROM.read(RECORD_POINTER);
-  pointer = pointerMSBLSB << 8;
-
-  // LSB next
-  pointerMSBLSB = EEPROM.read(RECORD_POINTER + 1);
-  pointer = pointer + pointerMSBLSB;
-
-
   // If the pointer is garbage or null at startup..
-  return int(constrain(pointer,RECORD_FIRST,RECORD_LAST));
-
+  return int(constrain(EEPROMReadWordAt(RECORD_POINTER),RECORD_FIRST,RECORD_LAST));
 
 }
 
@@ -160,15 +159,7 @@ int RecordReadLastNotify()
 {
   // Get the last notification sent
 
-  //MSB
-  pointerMSBLSB = EEPROM.read(RECORD_LAST_NOTIFY);
-  pointer = pointerMSBLSB << 8;
-
-  // LSB next
-  pointerMSBLSB = EEPROM.read(RECORD_LAST_NOTIFY + 1);
-  pointer = pointer + pointerMSBLSB;
-
-  return pointer;
+  return EEPROMReadWordAt(RECORD_LAST_NOTIFY);
 }
 
 
@@ -290,14 +281,7 @@ void RecordWriteEEPROM(byte event, unsigned int item, unsigned int value,  long 
   //  Serial.print(" recordWritePointerNext:");  // Debug
   //   Serial.print(pointer);  // Debug
 
-  msblsb = pointer >> 8; 
-  EEPROM.write(RECORD_POINTER,msblsb);
-
-  // LSB next
-  msblsb = pointer & B11111111; 
-  EEPROM.write(RECORD_POINTER + 1,msblsb);
-
-
+  RecordWriteINT(RECORD_POINTER,pointer);
 
 }
 
@@ -525,17 +509,15 @@ int RecordLastEEPROMwritten()  // starting with 0
 void RecordWriteLastNotify(int _p)
 {
   
-  msblsb = _p >> 8; 
-  EEPROM.write(RECORD_LAST_NOTIFY,msblsb);
-
-  // LSB next
-  msblsb = _p & B11111111; 
-  EEPROM.write(RECORD_LAST_NOTIFY + 1,msblsb);
+   RecordWriteINT(RECORD_LAST_NOTIFY,_p);
+  
 }
 
 int RecordReadLastNotifyNext(int _p) // starting with 0 handles wrapping
 {
+        _p = _p + RecordReadLastNotify();
         _p = (_p * RECORD_LENGTH) + RECORD_FIRST;
+
     
                   if (_p > RECORD_LAST)  // Is it wrapping?
                   {
