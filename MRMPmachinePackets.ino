@@ -27,12 +27,12 @@ boolean trackingTagNotEpired(char _tag)
   if(WithinTrackingTagRange(_tag))
   {   
      #ifdef DEBUG_MACHINE_PACKETS
-     Serial << "trackingTagNotEpired - Expiry time:" << absolute_time_tULmSTracking[_tag - ASCII_FIRST_TRACKING_TAG] << " Current time:" << *absolute_time_tULmS600 << endl;
+     Serial << F("trackingTagNotEpired - Expiry time:") << absolute_time_tULmSTracking[_tag - ASCII_FIRST_TRACKING_TAG] << F(" Current time:") << *absolute_time_tULmS600 << endl;
      #endif
     if(absolute_time_tULmSTracking[_tag - ASCII_FIRST_TRACKING_TAG] > *absolute_time_tULmS600)
     { 
        #ifdef DEBUG_MACHINE_PACKETS
-         Serial << "trackingTagNotEpired - Valid - less than" << endl;
+         Serial << F("trackingTagNotEpired - Valid - less than") << endl;
        #endif   
          absolute_time_tULmSTracking[_tag - ASCII_FIRST_TRACKING_TAG] = 0; // to ignore all following packets  
          return true; // Valid
@@ -40,7 +40,7 @@ boolean trackingTagNotEpired(char _tag)
     else
     {
          #ifdef DEBUG_MACHINE_PACKETS
-        Serial << "trackingTagNotEpired - Invalid - greater than" << endl;
+        Serial << F("trackingTagNotEpired - Invalid - greater than") << endl;
         #endif
            absolute_time_tULmSTracking[_tag - ASCII_FIRST_TRACKING_TAG] = 0; // to ignore all following packets
            return false; // Exired
@@ -49,7 +49,7 @@ boolean trackingTagNotEpired(char _tag)
   else  // not WithinTrackingTagRange
   {
      #ifdef DEBUG_MACHINE_PACKETS
-     Serial << "trackingTagNotEpired - Invalid - tag out of range" << endl;
+     Serial << F("trackingTagNotEpired - Invalid - tag out of range") << endl;
      #endif
     return false;  
    
@@ -73,11 +73,11 @@ void sendMachinePacketTo( char _tagrmp, char _toDev, char _type, char _command, 
   
       if(WithinTrackingTagRange(_tagrmp))   //setup the tracking  for a reply
       {
-      Serial << "Enable tracking case if necessary for:" << _tagrmp << endl;
+      Serial << F("Enable tracking case if necessary for:") << _tagrmp << endl;
       }    
       else
       {
-        Serial << "Tracking case not defined for:" << _tagrmp << endl;
+        Serial << F("Tracking case not defined for:") << _tagrmp << endl;
       }
   
   #endif // DEBUG_MACHINE_PACKETS
@@ -126,7 +126,7 @@ void sendMachinePacketTo( char _tagrmp, char _toDev, char _type, char _command, 
     PacketFooterAndSend();
     
        #ifdef DEBUG_MACHINE_PACKETS
-       Serial << "Machine packet To: " << _toDev << " MRMPSendPacketBuffer: " << MRMPSendPacketBuffer << endl;
+       Serial << F("Machine packet To: ") << _toDev << F(" MRMPSendPacketBuffer: ") << MRMPSendPacketBuffer << endl;
        #endif
 }
 

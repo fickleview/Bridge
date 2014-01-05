@@ -515,7 +515,7 @@ void RecordWriteLastNotify(int _p)
 
 int RecordReadLastNotifyNext(int _p) // starting with 0 handles wrapping
 {
-        _p = _p + RecordReadLastNotify();
+        _p =  _p + RecordReadLastNotify();
         _p = (_p * RECORD_LENGTH) + RECORD_FIRST;
 
     

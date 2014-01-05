@@ -13,9 +13,9 @@
 // These directives simply allow for more EEPROM records  (14 vs 56 records)
 // and more code  (14k vs 30k)
 
- 
-//#define DEBUG_EEPROM_ARRAYS   // Prints arrays at startup
-//#define DEBUG_EEPROM_RECORDS  // Prints records at startup
+//#define DEBUG_EEPROM
+#define DEBUG_EEPROM_ARRAYS   // Prints arrays at startup
+#define DEBUG_EEPROM_RECORDS  // Prints records at startup
 
 
  #define  EEPROM_RECORDS   // 900 bytes - Required -  A means to read/write EEPROM records. 

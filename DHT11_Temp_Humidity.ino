@@ -9,7 +9,7 @@
 
 void printTempHumidity()
 {
-   Serial << "Temperature:" << TempHumidityDht11.temperature << " Humidity:" << TempHumidityDht11.humidity << " Error:" << errorOnREadDht11 << endl;
+   Serial << F("Temperature:") << TempHumidityDht11.temperature << F(" Humidity:") << TempHumidityDht11.humidity << F(" Error:") << errorOnREadDht11 << endl;
 }
  
 int readTempHumidityDht11()

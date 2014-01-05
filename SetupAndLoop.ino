@@ -17,8 +17,8 @@ void setup()
 
    
    
-   Serial << endl << "THIS_DEV:" << THIS_DEV << " Release:" << kRelease  << endl;
-   Serial << "Free memory:" << freeRam() << endl << endl;
+   Serial << endl << F("THIS_DEV:") << THIS_DEV << F(" Release:") << kRelease  << endl;
+   Serial << F("Free memory:") << freeRam() << endl << endl;
 
 
 #ifdef WIRELESS_RF24
@@ -44,7 +44,7 @@ for (int i=1; i<=kNumberOfPipes; ++i)
 {
 radio.openReadingPipe(i,pipes[i-1]); //B92
  // #ifdef DEBRF24RADIO
-  Serial << "Listening on pipe:" << i << endl; 
+  Serial << F("Listening on pipe:") << i << endl; 
  // #endif
   
 }
@@ -257,9 +257,9 @@ char e;
   
   // Dump EEPROM int records  - Debug
 #ifdef DEBUG_EEPROM_ARRAYS
-  Serial << endl << endl << "Index:Value - A dump of EEPROM arrays. None or some may be loaded at Startup or by your functions." << endl << endl;
+  Serial << endl << endl << F("Index:Value - A dump of EEPROM arrays. None or some may be loaded at Startup or by your functions.") << endl << endl;
  int j = 0;
-  Serial << "EEPROM byte 2nn: " << endl;
+  Serial << F("EEPROM byte 2nn: ") << endl;
   for (int i = 0; i < BYTE_FIELD_SIZE; i++)
   {
     ++j;
@@ -274,7 +274,7 @@ char e;
  
 
  j = 0;
-  Serial << "EEPROM int 3nn: " << endl;
+  Serial << F("EEPROM int 3nn: ") << endl;
   for (int i = 0; i < INT_FIELD_SIZE; i++)
   {
     ++j;
@@ -288,7 +288,7 @@ char e;
  Serial << endl << endl;
 
  j = 0;
-  Serial << "EEPROM long 5nn: " << endl;
+  Serial << F("EEPROM long 5nn: ") << endl;
   for (int i = 0; i < LONG_FIELD_SIZE; i++)
   {
      ++j;

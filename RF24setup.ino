@@ -66,7 +66,7 @@ void writeRF24payload(uint8_t _pipe, char *payload, uint8_t bytes)
     
 #ifdef DEBRF24
         long _add = pipes[_pipe];
-        Serial << ">> Opened pipe#: " <<  _pipe << " Add: " << _add << endl;
+        Serial << F(">> Opened pipe#: ") <<  _pipe << F(" Add: ") << _add << endl;
         radio.printDetails();
 #endif // DEBRF24
         
@@ -82,7 +82,7 @@ boolean writeSuccess =false;
          writeSuccess =  radio.write( payload, bytes );
          
 #ifdef DEBRF24
-Serial << "Write returned:" << writeSuccess << endl;
+Serial << F("Write returned:") << writeSuccess << endl;
 #endif // DEBRF24
 
  
@@ -116,7 +116,7 @@ void writePacketToPipe( char *_buffer)  // packet buffer can be mutiples of 32 m
     pipe_num = elementInRouteTable(addr); // scans routing table for a pipe to send on
     
        #ifdef DEBUGREC
-       Serial << "Pipe ASCII:" << pipe_num << " Write Count:" << _count << " To:" << addr << " Writing:" <<  _buffer << endl;
+       Serial << F("Pipe ASCII:") << pipe_num << F(" Write Count:") << _count << F(" To:") << addr << F(" Writing:") <<  _buffer << endl;
        #endif
          
          
@@ -135,7 +135,7 @@ void writePacketToPipe( char *_buffer)  // packet buffer can be mutiples of 32 m
         MRMPnextBytePointer = _buffer +((_count/32)-chunks)*32;
     
       #ifdef DEBRF24
-       Serial << "#> Pipe int:" << pipe_num << " Chunks:" << chunks <<  " Length:" << len <<  " Current chunk:" << MRMPnextBytePointer-_buffer << endl;
+       Serial << F("#> Pipe int:") << pipe_num << F(" Chunks:") << chunks <<  " Length:" << len <<  " Current chunk:" << MRMPnextBytePointer-_buffer << endl;
        #endif
     
     
@@ -147,7 +147,7 @@ void writePacketToPipe( char *_buffer)  // packet buffer can be mutiples of 32 m
     
   
        #ifdef DEBRF24
-       Serial << "  *>> " << len << " >" << MRMPnextBytePointer << endl;
+       Serial << F("  *>> ") << len << F(" >") << MRMPnextBytePointer << endl;
        
        #endif
        
@@ -155,7 +155,7 @@ void writePacketToPipe( char *_buffer)  // packet buffer can be mutiples of 32 m
       } 
       
       #else
-             Serial << "WIRELESS_RF24 undefined" << endl;
+             Serial << F("WIRELESS_RF24 undefined") << endl;
       #endif
     }
     else
@@ -168,7 +168,7 @@ void writePacketToPipe( char *_buffer)  // packet buffer can be mutiples of 32 m
            stampTrackingTagEpires_mS(*(_buffer+ MRMP_TAG_INDEX),TRACKING_TAG_EXIPRY_mS);
            
              #ifdef SERIAL_BRIDGE_1_DEBUG
-             Serial << "Sent to SerialBridge1: " << _buffer << endl;
+             Serial << F("Sent to SerialBridge1: ") << _buffer << endl;
              #endif
           SerialBridge1.print(_buffer);
 
@@ -233,7 +233,7 @@ uint8_t checkRF24forPayload()
 	receive_payload[len] = 0;
 
 #ifdef DEBRF24
-  Serial << "#< Received:" << receive_payload << endl;
+  Serial << F("#< Received:") << receive_payload << endl;
 #endif
        
         processing = 'R';
@@ -246,14 +246,14 @@ uint8_t checkRF24forPayload()
             MRMPRecByteCount=MRMPRecByteCount+len;
             
              #ifdef DEBUGREC
-             Serial << "  MRMPRecByteCount: " << MRMPRecByteCount << " End: " << MRMPRecPacketBuffer[strlen(MRMPRecPacketBuffer)-1] << " MRMPRecPacketBuffer: " << MRMPRecPacketBuffer << endl;
+             Serial << F("  MRMPRecByteCount: ") << MRMPRecByteCount << F(" End: ") << MRMPRecPacketBuffer[strlen(MRMPRecPacketBuffer)-1] << F(" MRMPRecPacketBuffer: ") << MRMPRecPacketBuffer << endl;
              #endif
        
        
             if((MRMPRecPacketBuffer[strlen(MRMPRecPacketBuffer)-1]) == EOP_CHAR)
              {
                 #ifdef DEBUGREC
-                Serial << "  Complete packet: " << MRMPRecPacketBuffer << endl;
+                Serial << F("  Complete packet: ") << MRMPRecPacketBuffer << endl;
                 #endif
              
               MRMPRecByteCount=0;
@@ -267,7 +267,7 @@ uint8_t checkRF24forPayload()
              {
             
              #ifdef DEBUGREC
-             Serial << "  Incomplete packet: " << MRMPRecPacketBuffer << endl;
+             Serial << F("  Incomplete packet: ") << MRMPRecPacketBuffer << endl;
              #endif
              }
              
@@ -280,7 +280,7 @@ uint8_t checkRF24forPayload()
            
             
              #ifdef DEBUGREC
-             Serial << "  RF24 Packet overrflow" << endl;
+             Serial << F("  RF24 Packet overrflow") << endl;
              #endif
             
          }
