@@ -136,21 +136,14 @@ void WipeEEPROMrecordsOnly()
 
 
  #ifdef EEPROM_RECORDS 
- 
- int EEPROMReadWordAt(byte add)
- {
-   byte MSByte = EEPROM.read(add);
-   byte LSByte = EEPROM.read(add + 1);
-   return word(MSByte,LSByte);
 
- }
  
 int RecordReadPointer()
 {
   // Get the current pointer for the next write
 
   // If the pointer is garbage or null at startup..
-  return int(constrain(EEPROMReadWordAt(RECORD_POINTER),RECORD_FIRST,RECORD_LAST));
+  return int(constrain(RecordReadEPROMint(RECORD_POINTER),RECORD_FIRST,RECORD_LAST));
 
 }
 
@@ -159,7 +152,7 @@ int RecordReadLastNotify()
 {
   // Get the last notification sent
 
-  return EEPROMReadWordAt(RECORD_LAST_NOTIFY);
+  return RecordReadEPROMint(RECORD_LAST_NOTIFY);
 }
 
 
@@ -177,6 +170,10 @@ void RecordWriteBYTE(int p,byte b)  //
 
 void RecordWriteINT(int p,int i)  // Both integers
 {
+   #ifdef DEBUG_MACHINE_PACKETS
+     Serial << F("Writing last notify record to:") << p << F(" Value:") << i << endl;
+     #endif
+     
   msblsb = i >> 8;     
   EEPROM.write(p,msblsb);
 
@@ -515,9 +512,22 @@ void RecordWriteLastNotify(int _p)
 
 int RecordReadLastNotifyNext(int _p) // starting with 0 handles wrapping
 {
+            #ifdef DEBUG_EEPROM_RECORDS
+          Serial << endl << endl << F("RecordReadLastNotify: ") << _p << endl;      
+          #endif //  DEBUG_EEPROM_RECORDS
+          
         _p =  _p + RecordReadLastNotify();
-        _p = (_p * RECORD_LENGTH) + RECORD_FIRST;
+        
+          #ifdef DEBUG_EEPROM_RECORDS
+          Serial << endl << endl << F("Incremented:  ") << _p << endl;      
+          #endif //  DEBUG_EEPROM_RECORDS
+           
+        _p = (_p * RECORD_LENGTH) + RECORD_FIRST ;
 
+         #ifdef DEBUG_EEPROM_RECORDS
+          Serial << F("Record address: ") << _p << endl;      
+         #endif //  DEBUG_EEPROM_RECORDS
+           
     
                   if (_p > RECORD_LAST)  // Is it wrapping?
                   {
@@ -525,16 +535,21 @@ int RecordReadLastNotifyNext(int _p) // starting with 0 handles wrapping
                   }
                   
               _p = (_p - RECORD_FIRST) / RECORD_LENGTH;
+              
+          #ifdef DEBUG_EEPROM_RECORDS
+          Serial  << F("RecordReadLastNotifyNext: ") << _p << endl;      
+          #endif //  DEBUG_EEPROM_RECORDS
+    
               return _p;
 }
 
-  // check re-send records that have not been successfully sent 
+  // check re-send records that have not been successfully sent periodically
   void PollRecordReadEEPROMtoNotify()
   {
     #ifdef DEBUG_EEPROM_RECORDS
 
-          Serial << endl << endl << "RecordLastEEPROMwritten: " << RecordLastEEPROMwritten() << " RecordReadLastNotify: " << RecordReadLastNotify() << endl;
-          Serial << "NOTIFY_DEV: " << NOTIFY_DEV << " THIS_DEV: " << THIS_DEV << endl << endl;
+          Serial << endl << endl << F("RecordLastEEPROMwritten: ") << RecordLastEEPROMwritten() << F(" RecordReadLastNotify: ") << RecordReadLastNotify() << endl;
+          Serial << F("NOTIFY_DEV: ") << NOTIFY_DEV << F(" THIS_DEV: ") << THIS_DEV << endl << endl;
 
     #endif //  DEBUG_EEPROM_RECORDS
 

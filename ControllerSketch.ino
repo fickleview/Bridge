@@ -277,11 +277,13 @@ void handleTrackingTag()
      #ifdef DEBUG_MACHINE_PACKETS
      Serial << F("Tracking tag case:") << MRMP_TagInStr << endl;
      #endif
+     
       if(MRMP_ErrorCodeInStr == '0')  // Increment
                  {
-                  #ifdef DEBUG_MACHINE_PACKETS
+                 #ifdef DEBUG_MACHINE_PACKETS
                  Serial << F("Increment EEPROM last:") << RecordReadLastNotify() << endl;
                  #endif
+                 
                  incrementRecordWriteLastNotify();
                  }
      

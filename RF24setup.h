@@ -5,7 +5,7 @@
 #define RF24setup_H
 
   
-#define CE_pin 7 // Usually 10 but that is used on many shields
+#define CE_pin 10 // Usually 10 but that is used on many shields
 #define CSN_pin 9
 
 

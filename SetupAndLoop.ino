@@ -44,7 +44,8 @@ for (int i=1; i<=kNumberOfPipes; ++i)
 {
 radio.openReadingPipe(i,pipes[i-1]); //B92
  // #ifdef DEBRF24RADIO
-  Serial << F("Listening on pipe:") << i << endl; 
+ unsigned long _pipe = pipes[i-1];
+  Serial << F("Listening on pipe:") << _pipe << endl; 
  // #endif
   
 }
@@ -105,7 +106,12 @@ arrayLoadFromEEPROM3nn(0,2); // First and Last record,      TZ[300],     Weekday
 
 #ifdef DEBUG_EEPROM_RECORDS
   // Dump EEPROM recorder records. (NOT the array)
- Serial << endl << endl << "Index:Value - A dump of EEPROM records." << endl << endl;
+ 
+ Serial << endl << endl << "Index:Value - A dump of EEPROM records."  << endl;
+ int _l = RecordReadEPROMint(RECORD_LAST_NOTIFY);
+ int _p = RecordReadEPROMint(RECORD_POINTER);
+ 
+ Serial << "Last notify: " << _l << " Record pointer: " << _p << endl << endl;
 
   for (int i=0; i <= ((RECORD_LAST - RECORD_FIRST) / RECORD_LENGTH); i++)
   {
@@ -121,8 +127,9 @@ arrayLoadFromEEPROM3nn(0,2); // First and Last record,      TZ[300],     Weekday
   {
     RecordWriteLastNotify(RecordLastEEPROMwritten());
   }
-  
-//  RecordWriteLastNotify(1);  // Test
+ 
+ Serial << endl << endl << F("Last notify set to 1 in StartupAndLoop") << endl << endl; 
+  RecordWriteLastNotify(1);  // Test
   
 #endif // EEPROM_RECORDS
 

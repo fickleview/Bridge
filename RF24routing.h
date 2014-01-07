@@ -25,12 +25,12 @@ Port '0' is by default the local serial port.
 
 // 64 bit RF24 pipe static transmit and receive addresses. All unique.
  
-#define RF24_TX_RX_PIPE_ADD_X 0x0101010101LL
+#define RF24_TX_RX_PIPE_ADD_X 0x0101010101LL  // X
 
-#define RF24_TX_RX_PIPE_ADD_A 0x010101010aLL  // 
-#define RF24_TX_RX_PIPE_ADD_B 0x010101010bLL  // 
-#define RF24_TX_RX_PIPE_ADD_C 0x010101010cLL  // 
-
+#define RF24_TX_RX_PIPE_ADD_A 0x010101010aLL  // a
+#define RF24_TX_RX_PIPE_ADD_B 0x010101010bLL  // b
+#define RF24_TX_RX_PIPE_ADD_C 0x010101010cLL  // c
+#define RF24_TX_RX_PIPE_ADD_D 0x010101010dLL  // d
 
 
 // **************** Sample congigurations 1 *********************
@@ -56,12 +56,11 @@ Port '0' is by default the local serial port.
   //                         X <RF24_TX_RX_PIPE_ADD_B> b
 
   #define THIS_DEV 'X'
-  #define kNumberOfPipes 4
-   const  uint64_t pipes[] = {RF24_TX_RX_PIPE_ADD_X,RF24_TX_RX_PIPE_ADD_A,RF24_TX_RX_PIPE_ADD_B,RF24_TX_RX_PIPE_ADD_C};   // Transmit to RF24 address port list. a[0]  b[1] c[2]
-   const char routeTable[] = "a1,b2,c3,0*,Y',1*,2',3*,4*,5*,6*,7*,8*,9*";     // Comma delimited pairs. toDev and Port ie write to a use port 0
+  #define kNumberOfPipes 5
+   const  uint64_t pipes[] = {RF24_TX_RX_PIPE_ADD_X,RF24_TX_RX_PIPE_ADD_A,RF24_TX_RX_PIPE_ADD_B,RF24_TX_RX_PIPE_ADD_C,RF24_TX_RX_PIPE_ADD_D};   // Transmit to RF24 address port list. a[0]  b[1] c[2]
+   const char routeTable[] = "a1,b2,c3,d4,0*,Y',1*,2',3*,4*,5*,6*,7*,8*,9*";     // Comma delimited pairs. toDev and Port ie write to a use port 0
    
   #define WIRELESS_RF24        // Required to compile RF24 wireless library and functions
-//B92 now using kNumberOfPipes //  #define RECEIVE_ON_RF24_ADD    RF24_TX_RX_PIPE_ADD_X                        // What address to listen to on this device
 
 //
 #define SOFTSERIAL_BRIDGING                                                 // - A means to brige two devices via SoftSerial
@@ -86,8 +85,8 @@ Port '0' is by default the local serial port.
   
     #define THIS_DEV 'a'
     #define kNumberOfPipes 1
-   const  uint64_t pipes[] = {RF24_TX_RX_PIPE_ADD_A};                       // Transmit to RF24 address port list
-   const char routeTable[] = "b0,c0,X0,Y0,0*,10,20,3*,4*,5*,6*,7*,8*,9*";      // Comma delimited pairs. toDev and Port
+   const  uint64_t pipes[] = {RF24_TX_RX_PIPE_ADD_A};                        // Transmit to RF24 address port list
+   const char routeTable[] = "b0,c0,d0,X0,Y0,0*,10,20,3*,4*,5*,6*,7*,8*,9*"; // Do Not include THIS_DEV.  Comma delimited pairs. toDev and Port
 
   #define WIRELESS_RF24        // Required to compile RF24 wireless library and functions
  //B92 now using kNumberOfPipes //   #define RECEIVE_ON_RF24_ADD    RF24_TX_RX_PIPE_ADD_A  
@@ -108,7 +107,7 @@ Port '0' is by default the local serial port.
   #define THIS_DEV 'b'
   #define kNumberOfPipes 1
    const  uint64_t pipes[] = {RF24_TX_RX_PIPE_ADD_B};                          // Transmit to RF24 address port list
-   const char routeTable[] = "a0,c0,X0,Y0,0*,10,20,3*,4*,5*,6*,7*,8*,9*";      // Comma delimited pairs. toDev and Port
+   const char routeTable[] = "a0,c0,d0,X0,Y0,0*,10,20,3*,4*,5*,6*,7*,8*,9*";   // Do Not include THIS_DEV.  Comma delimited pairs. toDev and Port
 
   #define WIRELESS_RF24        // Required to compile RF24 wireless library and functions
 //B92 now using kNumberOfPipes //    #define RECEIVE_ON_RF24_ADD    RF24_TX_RX_PIPE_ADD_B  
@@ -130,14 +129,32 @@ Port '0' is by default the local serial port.
 
   #define kNumberOfPipes 1
    const  uint64_t pipes[] = {RF24_TX_RX_PIPE_ADD_C};                          // Transmit to RF24 address port list
-   const char routeTable[] = "a0,b0,X0,Y0,0*,10,20,3*,4*,5*,6*,7*,8*,9*";      // Comma delimited pairs. toDev and Port
+   const char routeTable[] = "a0,b0,d0,X0,Y0,0*,10,20,3*,4*,5*,6*,7*,8*,9*";   // Do Not include THIS_DEV.  Comma delimited pairs. toDev and Port
 
-//B92 now using kNumberOfPipes //    #define RECEIVE_ON_RF24_ADD    RF24_TX_RX_PIPE_ADD_C  
+
  #define FETCH_UNIX_TIME
 // End config 'c' sample 1  ===========================
 */
 
 /*
+
+/*
+// Begin config 'd' sample 1  ===========================
+
+ #define THIS_DEV 'd'
+ #define WIRELESS_RF24        // Required to compile RF24 wireless library and functions
+
+  #define kNumberOfPipes 1
+   const  uint64_t pipes[] = {RF24_TX_RX_PIPE_ADD_D};                          // Transmit to RF24 address port list
+   const char routeTable[] = "a0,b0,c0,X0,Y0,0*,10,20,3*,4*,5*,6*,7*,8*,9*";   // Do Not include THIS_DEV.  Comma delimited pairs. toDev and Port
+
+ #define FETCH_UNIX_TIME
+ 
+// End config 'c' sample 1  ===========================
+*/
+
+/*
+
 // Begin config 'Y' sample 1  ===========================
 
 
@@ -152,7 +169,7 @@ Port '0' is by default the local serial port.
 
   #define THIS_DEV 'Y'
  
-   const char routeTable[] = "a&,b&,c&,X&,0*,1*,2&,3*,4*,5*,6*,7*,8*,9*";      // Comma delimited pairs. toDev and Port
+   const char routeTable[] = "a&,b&,c&,X&,0*,1*,2&,3*,4*,5*,6*,7*,8*,9*";      // Do Not include THIS_DEV.  Comma delimited pairs. toDev and Port
 
 
   #define SOFTSERIAL_BRIDGING                                                  // - A means to brige two devices via SoftSerial
