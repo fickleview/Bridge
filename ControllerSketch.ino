@@ -1,5 +1,5 @@
 // Your controller code here
-// Built on 2.1.206
+// Built on 2.2.201
 
 // Your sketch here...
 
@@ -72,16 +72,20 @@ void task10xS()
 
 void taskEverySecond()
 {
-
   
+
   if(!(*absolute_time_t501 % 10))  // every ten seconds
   {
    if(NOTIFY_DEV != THIS_DEV)
    {
     PollRecordReadEEPROMtoNotify();
    }
+ 
+
   
-  }
+  }  // every ten seconds
+  
+  
   
   if (lastProcessTime+2 < *time_t500)
   { 
@@ -93,18 +97,19 @@ void taskEverySecond()
 
 void taskEveryMinute()
 {
-  
-  #ifdef DHT11_TEMP_HUMD          // readTempHumidityDht11() blocks for 22 mS. Since temperature and humidity change slowly 
+ 
+ 
+      #ifdef DHT11_TEMP_HUMD          // readTempHumidityDht11() blocks for 22 mS. Since temperature and humidity change slowly 
                                   // it is best to call readTempHumidityDht11() every minute and let other functions
                                   // use TempHumidityDht11.temperature or TempHumidityDht11.humidity as often as needed with 
                                   // very little blocking
   errorOnREadDht11 = readTempHumidityDht11();       // Returns an error that you can use globally
    
-  printTempHumidity();
+  printAndRecordTempHumidity();
  
   #endif // DHT11_TEMP_HUMD
   
-
+ 
   if(hourIs() == 4 && minuteIs() == 2) // TZ changes at 02:00 Spring, 03:00 Fall, Bridge updated by script every hour at xx:01
   {
         #ifdef FETCH_UNIX_TIME 
@@ -296,6 +301,17 @@ void handleTrackingTag()
      #ifdef DEBUG_MACHINE_PACKETS
      Serial << F("Tracking tag case:") << MRMP_TagInStr << endl;
      #endif
+     
+         if(MRMP_ErrorCodeInStr == '0')  // Increment
+                 {
+                 #ifdef DEBUG_MACHINE_PACKETS
+                 Serial << F("Room temperature from X:") <<  F(" Field:") << parm2 << F(" Value:") << parm3 << endl;
+                 #endif
+                 
+                 incrementRecordWriteLastNotify();
+                 }
+                 
+                 
     break;  // 'C'
     
   

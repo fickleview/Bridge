@@ -171,7 +171,7 @@ void RecordWriteBYTE(int p,byte b)  //
 void RecordWriteINT(int p,int i)  // Both integers
 {
    #ifdef DEBUG_MACHINE_PACKETS
-     Serial << F("Writing last notify record to:") << p << F(" Value:") << i << endl;
+     Serial << F("Writing INT to:") << p << F(" Value:") << i << endl;
      #endif
      
   msblsb = i >> 8;     
@@ -193,6 +193,9 @@ void RecordWriteINT(int p,int i)  // Both integers
 
 void RecordWriteLONG(int p,long l)  //
 {
+   #ifdef DEBUG_MACHINE_PACKETS
+     Serial << F("Writing LONG to:") << p << F(" Value:") << l << endl;
+     #endif
   msblsb = l >> 24;     
   EEPROM.write(p,msblsb);
 

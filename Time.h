@@ -2,7 +2,11 @@
 #ifndef TIME_H
 #define TIME_H
 
-  
+Timer timer;  // Event scheduler used for incrementing seconds and 10x second
+
+unsigned long cS_ticks;                  // 100 ms increments since startup.
+
+
 extern   void tickTock();
 
 extern   byte hourNow(long);

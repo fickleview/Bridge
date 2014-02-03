@@ -1,19 +1,13 @@
 // Built on 2.1.204 
 // Should not be modified 
 
-// TTTTTTTTTTTTTTTT  Time 1.1 *****************************
+// TTTTTTTTTTTTTTTT  Time 2.0 *****************************
 // tttttttttttttttttttttttttttttttttttttttttttttttttttt
-// To do - hardware clock
-// Counts seconds and quarter seconds since startup.
+// Using Timer.h scheduler
+// Counts seconds and 1/10 seconds since startup.
 // 86400 seconds per day is UNIX Time time_t
 // 000 is 3 * 60 * 60 = 10800 + 86400 = 92700
 // 3600 per minute
-
-
-byte secondBoundary = false;
-
-unsigned long cS_ticks;                  // 100 ms increments since startup.
-unsigned long PriorcS_ticks;             // Used for rollover detection
 
 int mS_time_t()   // 0 to 999 ms between seconds
 {
@@ -115,29 +109,11 @@ void printTime()
    Serial << secondIs() << "J" << endl;  // Juliet is local time zone
 }
 
-
+// TickTock is called by a Timer.h event handler every second, created in Setup.
 void tickTock()
 {
 
-  *absolute_time_tULmS600 = (*absolute_time_tUL601 *1000) + (millis() % 1000); // UL absolute seconds to the mS (one thousandeth)
-  cS_ticks = (millis() / 100); // will roll itself in 490 days
-   if (cS_ticks < PriorcS_ticks) // rolled over
-  { 
-    PriorcS_ticks = 0;     
-  }
-  else
-  {
-    if (cS_ticks > PriorcS_ticks)
-    {
-      task10xS();
-      PriorcS_ticks = cS_ticks;
-      
-    }
-  }
-  
-  if (((millis() % 1000) > 0) && ((millis() % 1000) < 500) && secondBoundary)
-  {
-    secondBoundary = false;   // Increment only once. 
+
     *time_t500 +=1;           // Since startup, no drift adjust
     *absolute_time_t501 +=1;  // Absolute, drift adjusted. For time stamps.
     *absolute_time_tUL601 +=1; 
@@ -171,17 +147,7 @@ void tickTock()
         }
       }
     }
-
-  }
-  else  // tickTock()
-  {
-    if(((millis() % 1000) < 999) && ((millis() % 1000) > 500) && !secondBoundary)
-    {
-      secondBoundary = true;
-    }
-
-
-  }
+ 
   /*
    Serial.print(" QS:");  // Debug
    Serial.print(cS_ticks);  // Debug

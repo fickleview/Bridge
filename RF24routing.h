@@ -137,8 +137,6 @@ Port '0' is by default the local serial port.
 */
 
 /*
-
-/*
 // Begin config 'd' sample 1  ===========================
 
  #define THIS_DEV 'd'

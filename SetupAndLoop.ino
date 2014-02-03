@@ -9,7 +9,20 @@ void setup()
 {
  
   Serial.begin(57600);
-  
+
+   int _timerEvent1;
+   int _timerEvent2;
+
+
+
+  _timerEvent1 = timer.every(1000, tickTock);  // Update the clock every second
+  _timerEvent2 = timer.every( 100, task10xS);  // Called 10x per second
+
+    #ifdef DEBUG_TEMP
+    Serial << endl << "tickTock event:" << _timerEvent1 <<  endl;
+    Serial << "task10xS event:" << _timerEvent2 <<  endl;
+    #endif
+
 
 #ifdef SOFTSERIAL_BRIDGING
   SerialBridge1.begin(57600);
@@ -32,7 +45,7 @@ void setup()
    radio.setAutoAck(false);        //B92 not used
  // optionally, increase the delay between retries & # of retries  delay,number
  //radio.setRetries(5,5);          // Default is best but may increase delivery to 20 mS
- radio.setDataRate(RF24_250KBPS);  // 250 has best range and low packey loss
+ radio.setDataRate(RF24_250KBPS);  // 250 has best range and low paket loss
  radio.setChannel(71);             // Set to a quiet channel for all devices
 
 
@@ -45,7 +58,7 @@ for (int i=1; i<=kNumberOfPipes; ++i)
 radio.openReadingPipe(i,pipes[i-1]); //B92
  // #ifdef DEBRF24RADIO
  unsigned long _pipe = pipes[i-1];
-  Serial << F("Listening on pipe:") << _pipe << endl; 
+  Serial << F("Listening on pipe:") << _HEX(_pipe) << endl; 
  // #endif
   
 }
@@ -97,7 +110,7 @@ RecordWriteINT(EEPROMadd2xx(1),  3);  // reply packet Debug level set to 3 by de
 */
 
 
-arrayLoadFromEEPROM2nn(0,1);  // First and Last record , not used,   DebugLevel[201]
+arrayLoadFromEEPROM2nn(0,2);  // First and Last record , not used,   DebugLevel[201]
 
 arrayLoadFromEEPROM3nn(0,2); // First and Last record,      TZ[300],     Weekday[301],  Date{302]
 #endif
@@ -336,7 +349,7 @@ char e;
 void loop() 
 {
   
-  
+    timer.update();
     mainTasks();
     
   // delay(10);

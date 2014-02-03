@@ -774,25 +774,58 @@ void executeCommand()  // Commands built by processCommand will be executed
                // The replay packet 
 
               errorMRMP = '?';
-                // pin and offset passed in 900 series packet bytes.  
-                // RX0vgT2,901,5562#
-                // pin 1
-                // offset 5562
-               
+                // RX0**T1,901, 5564#  // other 901 to 909
+                
+                // RX0**T1,910#  // DH11  910
+                // RX0**T1,920#  //       920  Wood stove thermal couple
+          
+        
+         switch(field) // Records field
+        {        // offset 5562
+          
+          
+         default:
+             RpacketReply('?', -32000);
+             
+             
+         case 1:   // Other 
+         case 2:
+         case 3:
+         case 4:
+         case 5:
+         case 6:
+         case 7:
+         case 8:
+         case 9:
          #ifdef TEMPERATURE
          {
           int _valueGt = getTemp();
           RpacketReply(errorMRMP,_valueGt);
          }
+         #else
+         RpacketReply('o', -32000);
          #endif  // TEMPERATURE
-        
+         break;
+         
+         case 10:  // DH11
          
         #ifdef DHT11_TEMP_HUMD
         {
            int _valueDh = getTempHDht11();         
            RpacketReply(errorMRMP,_valueDh);
         }
+        #else
+         RpacketReply('d', -32000);
+         
          #endif  // DHT11_TEMP_HUMD
+         
+   
+         break; // DH11
+        
+
+         
+        }
+        
          
         break;  //Temperature
 
@@ -1561,11 +1594,10 @@ int freeRam()
   return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval); 
 }
 
-
 void mainTasks()
 {
-      tickTock();             // Counts seconds and quarter seconds since startup
-      getAvailableSerial();   // Serial Communication Protocol
+    //  tickTock();             // Counts seconds and quarter seconds since startup Replaced with timer.event
+    getAvailableSerial();   // Serial Communication Protocol
 
    #ifdef WIRELESS_RF24
    if (checkRF24forPayload()) // Also process received payload

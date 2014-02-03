@@ -6,10 +6,59 @@
   #include <dht11.h>
 
   dht11 TempHumidityDht11;
+#define SAMPLES 4
 
-void printTempHumidity()
+int _tempSum;
+int _numSamples = 0;
+int _tempAv = -31000;
+// *PineRoomTemp202
+
+void printAndRecordTempHumidity()
 {
-   Serial << F("Temperature:") << TempHumidityDht11.temperature << F(" Humidity:") << TempHumidityDht11.humidity << F(" Error:") << errorOnREadDht11 << endl;
+ 
+  int _temp = TempHumidityDht11.temperature;
+  int _humd = TempHumidityDht11.humidity;
+  int _level = 0;
+  
+ if (_tempAv == -31000)  // Initialize
+ {
+    _tempAv = _temp;
+ }
+ 
+   Serial << "Temp:" << _temp << "TempAv:" << _tempAv << " Hum:" << _humd <<  " Set:" << *PineRoomTemp202 << endl;
+   
+  
+     
+     
+  if(abs(_tempAv - _temp))  // A change of more that 1
+  { 
+     
+    _tempSum = _tempSum + _temp;
+    _numSamples += 1 ;
+     
+    if(_numSamples >= SAMPLES)
+    {
+     _tempAv = _tempSum / _numSamples;
+     _tempSum = 0;
+     _numSamples = 0;
+     
+     if(_tempAv <= *PineRoomTemp202)
+     {
+      _level = 97;
+     }
+     else
+     {
+      _level = 116;
+    }
+   
+     // Log it as well. Has to be to and from 'X'..   116 is 't' text - low severity
+      Serial << F("R") << NOTIFY_DEV << THIS_DEV << F("B*N4,")  << _level << F(",") << _tempAv << F(",")  << _humd <<  F(",")  << *absolute_time_t501 << "#" << endl;
+
+
+
+    }
+  }
+  
 }
  
 int readTempHumidityDht11()

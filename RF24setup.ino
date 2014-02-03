@@ -66,7 +66,7 @@ void writeRF24payload(uint8_t _pipe, char *payload, uint8_t bytes)
     
 #ifdef DEBRF24
         long _add = pipes[_pipe];
-        Serial << F(">> Opened pipe#: ") <<  _pipe << F(" Add: ") << _add << endl;
+        Serial << F(">> Opened pipe#: ") <<  _HEX(_pipe) << F(" Add: ") << _HEX(_add) << endl;
         radio.printDetails();
 #endif // DEBRF24
         
