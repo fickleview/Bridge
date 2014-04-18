@@ -576,8 +576,8 @@ int RecordReadLastNotifyNext(int _p) // starting with 0 handles wrapping
 // This function is designed to read and write one, two and four byte varables to EEPROM
 // for restore of RAM arrays on Setup.
 
-#define ARRAY_TO_EEPROM_BASE 0   // uses the very first record in EEPROM
-#define  ARRAY_TO_EEPROM_MAX  RECORD_POINTER - 20  // Bytes reserved for saving. MUST not collide with other EEPROM
+const int ARRAY_TO_EEPROM_BASE =0;   // uses the very first record in EEPROM
+const int ARRAY_TO_EEPROM_MAX  = RECORD_POINTER - 20;  // Bytes reserved for saving. MUST not collide with other EEPROM
 
 // Following two stubbed off for debug and to save RAM
 

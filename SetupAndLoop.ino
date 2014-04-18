@@ -1,4 +1,4 @@
-// Last Modified 2015-04-17 2115J
+// Last Modified 2015-04-18 1012J
 // Should not be modified
 // See userSetp on ControllerSketch for your setup code.
  
@@ -30,15 +30,15 @@ void setup()
 
  Serial << F("EEPROM defined in MRMP.h for: ");
  
-#ifdef ATMEGA256   //  4k EEPROM
+#ifdef ATMEGA2560   //  4k EEPROM
  Serial << F("ATMEGA2560 4k");
 #endif
 
-#ifdef ATMEGA256   //  1k EEPROM
+#ifdef ATMEGA328   //  1k EEPROM
  Serial << F("ATMEGA328 1k");
 #endif
 
-#ifdef ATMEGA256   //  .5k EEPROM
+#ifdef ATMEGA168   //  .5k EEPROM
  Serial << F("ATMEGA168 .5k");
 #endif
 Serial  << endl  << endl;
@@ -109,12 +109,12 @@ digitalWrite(PING_PIN, HIGH);
 // Comment these out once initially burned.
 
 #ifdef EEPROM_ARRAYS
-/*
+/*  // Do this with a fresh EEPROM
 RecordWriteINT(EEPROMadd3xx(0), -5);  // Time Zone burned
 RecordWriteINT(EEPROMadd3xx(1),  0);  // Weekday incremented automatically each day
 RecordWriteINT(EEPROMadd3xx(2),  0);  // Date  incremented automatically each day and usually remotely set
 
-RecordWriteINT(EEPROMadd2xx(1),  3);  // reply packet Debug level set to 3 by default
+RecordWriteBYTE(EEPROMadd2xx(1),  3);  // reply packet Debug level set to 3 by default
 */
 
 

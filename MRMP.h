@@ -6,8 +6,8 @@
 
 
 // EEPROM target only one
-// #define ATMEGA2560    //  4k EEPROM
- #define ATMEGA328     //  1k EEPROM
+ #define ATMEGA2560    //  4k EEPROM
+// #define ATMEGA328     //  1k EEPROM
 //#define  ATMEGA168    // .5k EEPROM
 // Be sure to  pick a Tools > Board > that matches the Atmega selected above.
 // These directives simply allow for more EEPROM records  (14, 56, 227 records)
