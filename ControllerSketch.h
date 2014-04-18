@@ -1,5 +1,5 @@
+// Last modified 
 // Your controller header here
-// Built on 2.1.206
 
 #ifndef  CONTROLLER_SKETCH_H
 #define  CONTROLLER_SKETCH_H
@@ -11,13 +11,13 @@
 
 #define ALERT_CONTROLLER 'X'
 
-#define CHAR_FIELD_SIZE   2
-#define BYTE_FIELD_SIZE   3
-#define INT_FIELD_SIZE   11
-#define UINT_FIELD_SIZE   0
-#define LONG_FIELD_SIZE   4
-#define U_LONG_FIELD_SIZE 2
-#define DOUBLE_FIELD_SIZE 0
+const int CHAR_FIELD_SIZE =   2;
+const int  BYTE_FIELD_SIZE =  3;
+const int  INT_FIELD_SIZE =  11;
+const int  UINT_FIELD_SIZE =  0;
+const int  LONG_FIELD_SIZE =  4;
+const int  U_LONG_FIELD_SIZE= 2;
+const int  DOUBLE_FIELD_SIZE= 0;
 
 
 // Prototypes

@@ -1,4 +1,4 @@
-// Built on 2.1.204 
+// Last Modified 2015-04-17 2120J
 // Should not be modified 
 
 // TTTTTTTTTTTTTTTT  Time 2.0 *****************************
@@ -122,7 +122,7 @@ void tickTock()
     // drifting ahead of absolute time.
     // Adjust *absolute_time_t501 UNIX Time, only in taskEveryDay() or it may be skipped or repeated.
     // On the Controller, the absolute time will be the same at relative time until a time synce is requested from the Bridge.
-    // Manually set *absolute_time_t501 by authenticating as bridge user 1, then RX0vgP2,501,1223728457#
+    // Manually set *absolute_time_t501 by authenticating as bridge user 1, then RX0**P2,501,1223728457#
     // 1223728457 represents the current UNIX time.
 
     taskEverySecond();
@@ -147,20 +147,6 @@ void tickTock()
         }
       }
     }
- 
-  /*
-   Serial.print(" QS:");  // Debug
-   Serial.print(cS_ticks);  // Debug
-   
-   Serial.print(" Mills:");  // Debug
-   Serial.print(millis());  // Debug
-   
-   Serial.print(" Sec:");  // Debug
-   Serial.print(*time_t500);  // Debug
-   
-   Serial.print(" Abs:");  // Debug
-   Serial.println(*absolute_time_t501);  // Debug
-   */
 
 
 }  // tickTock()
@@ -173,8 +159,7 @@ void tickTock()
 //B83
  void sendUNIXtimeQuery(char _tag, int _field)
 {
-    sendMachinePacketTo(_tag, UNIXTIME_ON_DEV, 'R', 'G', '1', _field, 0, 0, 0, '0');  // 'A' is tracked and reply recorded
-     
+    sendMachinePacketTo(_tag, UNIXTIME_ON_DEV, 'R', 'G', '1', _field, 0, 0, 0, '0');  // 'A' is tracked and reply recorded     
 }
 
 
@@ -183,7 +168,7 @@ void requestUNIX_TZandDate()
     
         
        #ifdef DEBUG_UNIX
-          Serial << "requestUNIX_TZandDate" << endl;
+          Serial << F("requestUNIX_TZandDate") << endl;
         #endif
         
          waitUpToMsForReply(100);     

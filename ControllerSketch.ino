@@ -1,7 +1,5 @@
+// Last modified 
 // Your controller code here
-// Built on 2.2.201
-
-// Your sketch here...
 
 
 void userSetup()  // Called once during setup avoid modifying SetuAndLoop
@@ -97,17 +95,6 @@ void taskEverySecond()
 
 void taskEveryMinute()
 {
- 
- 
-      #ifdef DHT11_TEMP_HUMD          // readTempHumidityDht11() blocks for 22 mS. Since temperature and humidity change slowly 
-                                  // it is best to call readTempHumidityDht11() every minute and let other functions
-                                  // use TempHumidityDht11.temperature or TempHumidityDht11.humidity as often as needed with 
-                                  // very little blocking
-  errorOnREadDht11 = readTempHumidityDht11();       // Returns an error that you can use globally
-   
-  printAndRecordTempHumidity();
- 
-  #endif // DHT11_TEMP_HUMD
   
  
   if(hourIs() == 4 && minuteIs() == 2) // TZ changes at 02:00 Spring, 03:00 Fall, Bridge updated by script every hour at xx:01
@@ -355,5 +342,30 @@ void handleTrackingTag()
 
 // If successful, it triggers additional machine packet request for the date and day
 
+
+/*
+#define toggle 9//pin to toggle led on and off
+#define led 13
+
+SM Simple(S1);//create simple statemachine
+
+State S1(){
+  digitalWrite(led, HIGH);//turn led on
+  if(digitalRead(toggle)) Simple.Set(S2);//wait for toggle pin to go high and change state to S2
+}
+
+State S2(){
+  if(!digitalRead(toggle)) Simple.Set(S3);//wait for toggle pin to go low and change state to S3
+}
+
+State S3(){
+  digitalWrite(led, LOW);//turn led off
+  if(digitalRead(toggle)) Simple.Set(S4);//wait for toggle pin to go high and change state to S4
+}
+
+State S4(){
+  if(!digitalRead(toggle)) Simple.Set(S1);//wait for toggle pin to go low and change state to S1
+}
+*/
 
 

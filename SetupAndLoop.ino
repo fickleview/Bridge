@@ -1,5 +1,5 @@
-// Built on 2.1.205
-// Should not be modofied
+// Last Modified 2015-04-17 2115J
+// Should not be modified
 // See userSetp on ControllerSketch for your setup code.
  
 // *************** Setup ***************************
@@ -17,12 +17,7 @@ void setup()
 
   _timerEvent1 = timer.every(1000, tickTock);  // Update the clock every second
   _timerEvent2 = timer.every( 100, task10xS);  // Called 10x per second
-
-    #ifdef DEBUG_TEMP
-    Serial << endl << "tickTock event:" << _timerEvent1 <<  endl;
-    Serial << "task10xS event:" << _timerEvent2 <<  endl;
-    #endif
-
+  
 
 #ifdef SOFTSERIAL_BRIDGING
   SerialBridge1.begin(57600);
@@ -32,6 +27,22 @@ void setup()
    
    Serial << endl << F("THIS_DEV:") << THIS_DEV << F(" Release:") << kRelease  << endl;
    Serial << F("Free memory:") << freeRam() << endl << endl;
+
+ Serial << F("EEPROM defined in MRMP.h for: ");
+ 
+#ifdef ATMEGA256   //  4k EEPROM
+ Serial << F("ATMEGA2560 4k");
+#endif
+
+#ifdef ATMEGA256   //  1k EEPROM
+ Serial << F("ATMEGA328 1k");
+#endif
+
+#ifdef ATMEGA256   //  .5k EEPROM
+ Serial << F("ATMEGA168 .5k");
+#endif
+Serial  << endl  << endl;
+
 
 
 #ifdef WIRELESS_RF24
@@ -44,7 +55,7 @@ void setup()
 
    radio.setAutoAck(false);        //B92 not used
  // optionally, increase the delay between retries & # of retries  delay,number
- //radio.setRetries(5,5);          // Default is best but may increase delivery to 20 mS
+ // radio.setRetries(5,5);          // Default is best but may increase delivery to 20 mS
  radio.setDataRate(RF24_250KBPS);  // 250 has best range and low paket loss
  radio.setChannel(71);             // Set to a quiet channel for all devices
 
@@ -83,7 +94,7 @@ delay(random(0, 1000));  // To prevent all device queries simultaneously at star
 #ifdef FETCH_UNIX_TIME
 tickTock();              // setup baseline clock values
 
-readUNIXtime();          // UNIXTIME_ON_DEV 
+readUNIXtime();          // from UNIXTIME_ON_DEV 
 #endif
 
 
@@ -95,10 +106,7 @@ digitalWrite(PING_PIN, HIGH);
 #endif
 
 
-//  *TZ300 = -5; // Hours Local time zone incluting the DST adjust overriden by EEPROM value
-
 // Comment these out once initially burned.
-// Can be set with MRMP 'e' as well R01vgP3,300,-5,e#
 
 #ifdef EEPROM_ARRAYS
 /*

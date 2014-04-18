@@ -1,4 +1,4 @@
-// Built on 2.1.207 
+// Last modified 
 // Modify for your sketch
 
 
@@ -25,22 +25,22 @@ Port '0' is by default the local serial port.
 
 // 64 bit RF24 pipe static transmit and receive addresses. All unique.
  
-#define RF24_TX_RX_PIPE_ADD_X 0x0101010101LL  // X
+const  uint64_t RF24_TX_RX_PIPE_ADD_X =0x0101010101LL;  // X
 
-#define RF24_TX_RX_PIPE_ADD_A 0x010101010aLL  // a
-#define RF24_TX_RX_PIPE_ADD_B 0x010101010bLL  // b
-#define RF24_TX_RX_PIPE_ADD_C 0x010101010cLL  // c
-#define RF24_TX_RX_PIPE_ADD_D 0x010101010dLL  // d
+const  uint64_t RF24_TX_RX_PIPE_ADD_A =0x010101010aLL;  // a
+const  uint64_t RF24_TX_RX_PIPE_ADD_B =0x010101010bLL;  // b
+const  uint64_t RF24_TX_RX_PIPE_ADD_C =0x010101010cLL;  // c
+const  uint64_t RF24_TX_RX_PIPE_ADD_D =0x010101010dLL;  // d
 
 
 // **************** Sample congigurations 1 *********************
 //       ***********************************************
 
-#define NOTIFY_DEV      'X'      // where to send notifications
-#define UNIXTIME_ON_DEV 'X'      // where to fetch the UNIX time at startup
-                                 // the UNIX time is updated on UNIXTIME_ON_DEV by a script (perl) on the briged computer
+const char NOTIFY_DEV      ='X';      // where to send notifications
+const char UNIXTIME_ON_DEV ='X';      // where to fetch the UNIX time at startup
+                                 // the UNIX time is updated on UNIXTIME_ON_DEV by a script (perl) on the bridged computer
 
-  // Topology sample 1 'X' is thehub for all devices. 
+  // Topology sample 1 'X' is the hub for all devices. 
   // However, it is perfectly okay for a to communicate with b directly if you desire
   //    Y <SOFT_SERIAL_PIPE> X <RF24_TX_RX_PIPE_ADD_A> a
   //                         X <RF24_TX_RX_PIPE_ADD_B> b
@@ -55,9 +55,9 @@ Port '0' is by default the local serial port.
   //    Y <SOFT_SERIAL_PIPE> X <RF24_TX_RX_PIPE_ADD_A> a
   //                         X <RF24_TX_RX_PIPE_ADD_B> b
 
-  #define THIS_DEV 'X'
-  #define kNumberOfPipes 5
-   const  uint64_t pipes[] = {RF24_TX_RX_PIPE_ADD_X,RF24_TX_RX_PIPE_ADD_A,RF24_TX_RX_PIPE_ADD_B,RF24_TX_RX_PIPE_ADD_C,RF24_TX_RX_PIPE_ADD_D};   // Transmit to RF24 address port list. a[0]  b[1] c[2]
+const char THIS_DEV ='X';
+const int kNumberOfPipes =5;
+   const  uint64_t pipes[] = {RF24_TX_RX_PIPE_ADD_X,RF24_TX_RX_PIPE_ADD_A,RF24_TX_RX_PIPE_ADD_B,RF24_TX_RX_PIPE_ADD_C,RF24_TX_RX_PIPE_ADD_D};   // Transmit to RF24 address port list. X[0] a[1]  b[2] c[3] d[4]
    const char routeTable[] = "a1,b2,c3,d4,0*,Y',1*,2',3*,4*,5*,6*,7*,8*,9*";     // Comma delimited pairs. toDev and Port ie write to a use port 0
    
   #define WIRELESS_RF24        // Required to compile RF24 wireless library and functions

@@ -1,4 +1,4 @@
-// Built on 2.1.205 
+// Last modified 
 // Should not be modified
 
    /*
@@ -23,7 +23,6 @@
 // ============== MRMP functions ==========================
 // =======================================================
 
-//B61 
 
 void RpacketData(long data)   // Builds string ,1234   where 1234 is data
 {
@@ -79,9 +78,6 @@ void PacketFooterAndSend()
 }
 
 
-
- //B63 Reply verbosity 0 to 3
- //B69 Okay only if error is not '0'
 void RpacketReply( char _error, long _data)
 {
   char _reply ='r';
@@ -776,8 +772,8 @@ void executeCommand()  // Commands built by processCommand will be executed
               errorMRMP = '?';
                 // RX0**T1,901, 5564#  // other 901 to 909
                 
-                // RX0**T1,910#  // DH11  910
-                // RX0**T1,920#  //       920  Wood stove thermal couple
+                // RX0**T1,910#  //       910
+                // RX0**T1,920#  //       920 thermal couple
           
         
          switch(field) // Records field
@@ -797,7 +793,7 @@ void executeCommand()  // Commands built by processCommand will be executed
          case 7:
          case 8:
          case 9:
-         #ifdef TEMPERATURE
+         #ifdef TEMPERATURE_LM335
          {
           int _valueGt = getTemp();
           RpacketReply(errorMRMP,_valueGt);
@@ -807,20 +803,10 @@ void executeCommand()  // Commands built by processCommand will be executed
          #endif  // TEMPERATURE
          break;
          
-         case 10:  // DH11
+         case 10:  // 
          
-        #ifdef DHT11_TEMP_HUMD
-        {
-           int _valueDh = getTempHDht11();         
-           RpacketReply(errorMRMP,_valueDh);
-        }
-        #else
-         RpacketReply('d', -32000);
-         
-         #endif  // DHT11_TEMP_HUMD
-         
-   
-         break; // DH11
+     
+         break;
         
 
          

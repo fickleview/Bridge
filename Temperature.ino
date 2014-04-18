@@ -1,4 +1,4 @@
-// Built on 2.1.001
+// Last modified 2014-04-17 2113J
 // Should not be modified
 
 
@@ -6,7 +6,7 @@
 // TTTTTTTTTTTTTTTTTTTT Temperature 2.0 TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
 // TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
 
-#ifdef TEMPERATURE
+#ifdef TEMPERATURE_LM335
 
 #define BitsPerDegree 215       // Slope  2.15
 // #define Bits0Degrees 5490       // Offset. 10 x the bits at zero degrees in WATER. 
@@ -99,5 +99,5 @@ long getTemp()   // fieldType = FieldBase, field = sensor or channel
   }
 }
 
-#endif // TEMPERATURE
+#endif // TEMPERATURe_LM335
 

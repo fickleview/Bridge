@@ -1,4 +1,4 @@
-// Built on 2.1.203 
+// Last modified 
 // Should not be modified
 
 #ifndef MMRP_MACHINE_PACKETS_H
@@ -7,15 +7,15 @@
   
 
 //B83 Machine generated packet Tracking
-#define ASCII_FIRST_TRACKING_TAG 'A'     // MUST be before ASCII_LAST_TRACKING_TAG
-#define  ASCII_LAST_TRACKING_TAG 'E'     // Defines last character a continious sequence tracking tags and associated records
-#define TRACKING_TABLE_ENTRIES ((ASCII_LAST_TRACKING_TAG - ASCII_FIRST_TRACKING_TAG) + 1)
+const char ASCII_FIRST_TRACKING_TAG ='A';     // MUST be before ASCII_LAST_TRACKING_TAG
+const char  ASCII_LAST_TRACKING_TAG ='E';     // Defines last character a continious sequence tracking tags and associated records
+const int TRACKING_TABLE_ENTRIES = ((ASCII_LAST_TRACKING_TAG - ASCII_FIRST_TRACKING_TAG) + 1);
 
-#define TRACKING_TAG_EXIPRY_mS 1500     // added to *absolute_time_tULmS600. Reply expected before expiry
+const int TRACKING_TAG_EXIPRY_mS =1500;     // added to *absolute_time_tULmS600. Reply expected before expiry
 
-#define REPLY_TRACKING_TAG_CHAR 't'     // define the reply tag character used for tracking purposes. Same on all devices!
+const char REPLY_TRACKING_TAG_CHAR ='t';     // define the reply tag character used for tracking purposes. Same on all devices!
                                     
-#define MACHINE_TAG '*'  // To identify untracked machine generated packets. Must be the same on all devices.
+const char MACHINE_TAG ='*';  // To identify untracked machine generated packets. Must be the same on all devices.
                          // 'r' reserved for untrached authenticated replies
                          // 't' reserved for tracked tags
                          // 'A' to 'Z' reserved for static reply tags used for tracking

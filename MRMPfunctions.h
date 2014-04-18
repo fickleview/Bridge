@@ -1,4 +1,3 @@
-// Built on 2.1.001 
 // Should not be modified
 
 #ifndef kMRMPfunctions_h

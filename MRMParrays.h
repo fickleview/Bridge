@@ -1,4 +1,4 @@
-// Built on 2.1.001 
+// Last modified 
 // Modify for your sketch
 
 #ifndef MRMParrays_H
@@ -24,12 +24,12 @@
 // xx_FIELD_SIZE is used to capture reads/writes beyond the end of the defined array.
 
 // char          elements 100 to 199
-#define CHAR_FIELD_BASE 100
+const int CHAR_FIELD_BASE =100;
 //#define CHAR_FIELD_SIZE   2    
 char charField[CHAR_FIELD_SIZE];
 
 // byte          elements 200 to 299
-#define BYTE_FIELD_BASE 200
+const int BYTE_FIELD_BASE =200;
 //#define BYTE_FIELD_SIZE   3
 byte byteField[BYTE_FIELD_SIZE];
 
@@ -40,7 +40,7 @@ byte *PineRoomTemp202 = byteField+2;  //
 
 
 // int           elements 300 to 399
-#define INT_FIELD_BASE 300
+const int INT_FIELD_BASE =300;
 //#define INT_FIELD_SIZE  11
 int intField[INT_FIELD_SIZE];
 
@@ -55,12 +55,12 @@ int *watchDogState304  = intField + 4;   // A flag to force a power cycle.
 
 
 // unsigned int  elements 400 to 499
-#define UINT_FIELD_BASE 400
+const int UINT_FIELD_BASE =400;
 //#define UINT_FIELD_SIZE   0
 unsigned int UintField[UINT_FIELD_SIZE];
 
 // long          elements 500 to 599
-#define LONG_FIELD_BASE 500
+const int LONG_FIELD_BASE =500;
 //#define LONG_FIELD_SIZE   4
 long longField[LONG_FIELD_SIZE];
 // 0 is UNIX time
@@ -71,28 +71,28 @@ long *watchDogLastBark502 = longField + 2;  // UNIX time of last successful ping
 
 
 // unsigned long elements 600 to 699
-#define ULONG_FIELD_BASE 600
+const int ULONG_FIELD_BASE =600;
 //#define U_LONG_FIELD_SIZE  2
 unsigned long UlongField[U_LONG_FIELD_SIZE];
 unsigned long *absolute_time_tULmS600 = UlongField    ;  // absolute_time_tUL601 plus mS - Updated periodically
 unsigned long *absolute_time_tUL601   = UlongField + 1;  // UL Updated periodically. Same as absolute_time_t501 but will not rollover
 
 // float         elements 700 to 799
-#define FLOAT_FIELD_BASE 700
-#define FLOAT_FIELD_SIZE   0
+const int FLOAT_FIELD_BASE =700;
+const int FLOAT_FIELD_SIZE   =0;
 float floatField[FLOAT_FIELD_SIZE];
 
 //http://www.nongnu.org/avr-libc/user-manual/group__avr__stdlib.html#ga6c140bdd3b9bd740a1490137317caa44
 // dtostrf  dtostre
 // double        elements 800 to 899
-#define DOUBLE_FIELD_BASE 800
-//#define DOUBLE_FIELD_SIZE   0
+const int DOUBLE_FIELD_BASE =800;
+//#const int DOUBLE_FIELD_SIZE  = 0;
 double doubleField[DOUBLE_FIELD_SIZE];
 
 // others        elements 900 to 999  such as temp snsors
 // 900 series is different in that it fetches data from a port
-#define OTHER_BASE 900
-#define OTHER_BASETemp 90  // 990 to 999 channels 0 to 9
-#define OTHER_BASEAuth 80  // 880 to 889 users 0 to 9 ( 1 to 8 valid UID)
+const int OTHER_BASE =900;
+const int OTHER_BASETemp =90;  // 990 to 999 channels 0 to 9
+const int OTHER_BASEAuth =80;  // 880 to 889 users 0 to 9 ( 1 to 8 valid UID)
 
 #endif // #define MRMParrays_H
