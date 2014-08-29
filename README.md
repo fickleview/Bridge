@@ -9,3 +9,4 @@ MRMP Arrays:         https://docs.google.com/document/d/1M6lgg44C15ne44S3E2n2X3N
 
 MRMP Reference:      https://docs.google.com/document/d/1enh0rBecwbLMSJslOCas4kEIcctK9Ouq2XwSuiX0xe0/edit?usp=sharing
 
+MRMP Tutorial:       https://docs.google.com/document/d/19OJyHnknZsgnMmpR0KBPPIjxW6q7yMmSfaMqyF-qUtQ/edit?usp=sharing
