@@ -33,7 +33,7 @@ const int BYTE_FIELD_BASE =200;
 //#define BYTE_FIELD_SIZE   3
 byte byteField[BYTE_FIELD_SIZE];
 
-byte *build200 = byteField;           // Used by MRMP to determine capabilities base on minimum version.
+byte *Address200 = byteField;         // Used by MRMP as ASSCII MRMP address.
 byte *DebugLevel201 = byteField+1;    // Verbosity shown in Okay packet reply,  0 : quiet, 1: basic, 2: verbose 3: extreme
 byte *PineRoomTemp202 = byteField+2;  //
 
@@ -51,8 +51,10 @@ int *Date302    = intField +2;  // Calendar date
 
 
 int *watchDogSnooze303 = intField + 3;  // Seconds the watchdog will snooze before it wakes
-int *watchDogState304  = intField + 4;   // A flag to force a power cycle.
+int *watchDogState304  = intField + 4;  // A flag to force a power cycle.
 
+int  *insideTemp305    = intField +5;   //
+int *outsideTemp306    = intField +6;   //
 
 // unsigned int  elements 400 to 499
 const int UINT_FIELD_BASE =400;

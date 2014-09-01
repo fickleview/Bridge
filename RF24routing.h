@@ -56,9 +56,9 @@ const char UNIXTIME_ON_DEV ='X';      // where to fetch the UNIX time at startup
   //                         X <RF24_TX_RX_PIPE_ADD_B> b
 
 const char THIS_DEV ='X';
-const int kNumberOfPipes =5;
-   const  uint64_t pipes[] = {RF24_TX_RX_PIPE_ADD_X,RF24_TX_RX_PIPE_ADD_A,RF24_TX_RX_PIPE_ADD_B,RF24_TX_RX_PIPE_ADD_C,RF24_TX_RX_PIPE_ADD_D};   // Transmit to RF24 address port list. X[0] a[1]  b[2] c[3] d[4]
-   const char routeTable[] = "a1,b2,c3,d4,0*,Y',1*,2',3*,4*,5*,6*,7*,8*,9*";     // Comma delimited pairs. toDev and Port ie write to a use port 0
+const int kNumberOfPipes =4;
+   const  uint64_t pipes[] = {RF24_TX_RX_PIPE_ADD_A,RF24_TX_RX_PIPE_ADD_B,RF24_TX_RX_PIPE_ADD_C,RF24_TX_RX_PIPE_ADD_D};   // Transmit to RF24 address port list. X[0] a[1]  b[2] c[3] d[4]
+   const char routeTable[] = "a0,b1,c2,d3,0*,Y',1*,2',3*,4*,5*,6*,7*,8*,9*";     // Comma delimited pairs. toDev and Port ie write to a use port 0
    
   #define WIRELESS_RF24        // Required to compile RF24 wireless library and functions
 

@@ -1,9 +1,10 @@
+
 // MRMP Wireless and Serial Bridge development environment
 // c 2014-04  S. George Matthews   mrmp@fickleview.com
-// Last Modified 2015-04-17 2115J
+// Last Modified 2014-08-30 0935J
 
-#define kRelease "2.1.210"             // Used by MRMP to determine capabilities
-#define BUILD_UNIX_TIME 1397780087     // Used for UNIX time sanity checks
+#define kRelease "2.3"             // Used by MRMP to determine capabilities
+#define BUILD_UNIX_TIME 1409402147 // Used for UNIX time sanity checks
 
 
 #include <Arduino.h>
@@ -11,6 +12,7 @@
 #include <stdlib.h>      // String functions
 #include <Timer.h>
 #include <SM.h>
+#include <OneWire.h>
 
 // These should not be modified. Options defined on MRMP.h
 
@@ -31,9 +33,6 @@
 
 #include "Temperature.h" 
 #include "Volts.h"
-
-#include "AccelStepper.h"
-
 
 
 

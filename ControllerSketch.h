@@ -11,6 +11,7 @@
 
 #define ALERT_CONTROLLER 'X'
 
+
 const int CHAR_FIELD_SIZE =   2;
 const int  BYTE_FIELD_SIZE =  3;
 const int  INT_FIELD_SIZE =  11;
@@ -19,6 +20,7 @@ const int  LONG_FIELD_SIZE =  4;
 const int  U_LONG_FIELD_SIZE= 2;
 const int  DOUBLE_FIELD_SIZE= 0;
 
+const int  DS18B20_PIN= 3;
 
 // Prototypes
 extern void userSetup();

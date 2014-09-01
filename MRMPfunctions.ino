@@ -1053,7 +1053,7 @@ void processSerial()
            
             
              #ifdef DEBUGREC
-             Serial << (" Serial Packet overrflow \n\r");
+             Serial << F(" Serial Packet overrflow \n\r");
              #endif
              
             }

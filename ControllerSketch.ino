@@ -1,10 +1,19 @@
 // Last modified 
 // Your controller code here
 
-
+OneWire ds18b20(DS18B20_PIN);  // OneWire is a Dallas Semiconductor library
+  
 void userSetup()  // Called once during setup avoid modifying SetuAndLoop
 {
+ 
 }
+
+
+void userTasks() // Called during every loop. Avoid tasks that block.
+{
+ 
+}
+
 
 
 void userCommand(char _command ) // a means to decouple the supplied command set from the user command set
@@ -64,21 +73,44 @@ Serial << endl << F("Replied to notification and got... ") << endl << F(" comman
 // add to but avoid modifying...
 void task10xS()
 {
- 
+
 }
 
 
 void taskEverySecond()
 {
   
+ switch (iGetTemps)
+  {
+   
+   case (1):
+   getTempFrom(DS18B20_BRIDGE_INSIDE_ADD);
+   break;
+   
+   case(2):
+   getTempFrom(DS18B20_BRIDGE_OUTSIDE_ADD);
+   break;
+   
+   case(3):
+   Serial << F("RXXB*N4,116,") << *insideTemp305 << "," << *outsideTemp306 << ","  << *absolute_time_t501 << "#" << endl;
+
+   iGetTemps= 0;
+   break;
+  }
+
 
   if(!(*absolute_time_t501 % 10))  // every ten seconds
   {
+    
+
+ 
    if(NOTIFY_DEV != THIS_DEV)
    {
     PollRecordReadEEPROMtoNotify();
    }
  
+   // Log Temp and Humd. Has to be to and from 'X'..   116 is 't' text - low severity
+   //   Serial << F("R") << NOTIFY_DEV << THIS_DEV << F("B*N4,")  << _level << F(",") << _tempAv << F(",")  << _humd <<  F(",")  << *absolute_time_t501 << "#" << endl;
 
   
   }  // every ten seconds
@@ -95,8 +127,15 @@ void taskEverySecond()
 
 void taskEveryMinute()
 {
-  
+
  
+  if(!(*absolute_time_t501 % 600))  // every ten minutes
+  {
+      iGetTemps = 1; // A series
+ 
+  }
+  
+  
   if(hourIs() == 4 && minuteIs() == 2) // TZ changes at 02:00 Spring, 03:00 Fall, Bridge updated by script every hour at xx:01
   {
         #ifdef FETCH_UNIX_TIME 
@@ -149,6 +188,8 @@ if(hourIs() == 4 && minuteIs() == 3) // The following minute. Too much blocking 
 void taskEveryHour()
 {
 
+
+      
 }
 
   
@@ -334,13 +375,17 @@ void handleTrackingTag()
 // sendMachinePacketTo( char _tagrmp, char _toDev, char _type, char _command, char _parameters, int _parameter1, long _parameter2,long _parameter3, long _parameter4,char _EEPROM)
 
 // How UNIX time is fetched. 'A' is the machine packet tag and the packet is time stamped and must be received before expiry. 
-// TRACKING_TAG_EXIPRY_mS is set to 1.5 seconds. Even though packets are 2mS per hop.
+// TRACKING_TAG_EXIPRY_mS is set to 1.5 seconds18b20. Even though packets are 2mS per hop.
 
 // A sent packet need not be tagged and tracked, but this method avoids setting up custom code to manage replies.
 
 // sendMachinePacketTo('A', 'X', 'R', 'G', '1', 501, 0, 0, 0, 0, '0');  // That is the actual code used to fetch the UNIX time from 'X'
 
 // If successful, it triggers additional machine packet request for the date and day
+
+
+
+
 
 
 /*

@@ -1,4 +1,4 @@
-// Last Modified 2015-04-18 1012J
+// Last Modified 2015-04-21 1001J
 // Should not be modified
 // See userSetp on ControllerSketch for your setup code.
  
@@ -47,6 +47,8 @@ Serial  << endl  << endl;
 
 #ifdef WIRELESS_RF24
   // RF24 setup
+   Serial << F("RF24 Using CE pin:") << CE_pin << endl << endl;
+
 
   radio.begin();  // RF24 wireless
  
@@ -81,7 +83,7 @@ radio.startListening();
   //
 
 
-     radio.printDetails();
+  //   radio.printDetails();  // Needs printf
  
   
 
@@ -359,6 +361,7 @@ void loop()
   
     timer.update();
     mainTasks();
+    userTasks();
     
   // delay(10);
 

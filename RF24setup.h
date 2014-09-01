@@ -1,13 +1,34 @@
-// Last modified 2014-04-17 2210J
+// Last modified 2014-04-22 0915J
 // Should not be modified
 
 #ifndef RF24setup_H
 #define RF24setup_H
 
-  
-const int CE_pin =10; // Usually 10 but that is used on many other shields
-const int CSN_pin =9;
+//Test RF24 pinout   // RcX**G1,501#
 
+/*
+RF24 pinout
+
+Uno           Mega
+
+11       -      51            (MOSI)
+12       -      50            (MISO)
+13       -      52            (SCK)
+10        -     53            (CSN)
+9       -       40 (Your choice) (CE)
+
+*/
+
+
+#ifdef ATMEGA2560
+ const int CE_pin  = 40; // Usually 40 but that may be used on other shields
+ const int CSN_pin = 53;
+#endif //
+
+#ifdef ATMEGA328
+ const int CE_pin  = 10; // Usually 9 but that is used on many other shields
+ const int CSN_pin = 9;  // Usually 10  but that is used on many other shields as CE
+#endif // ATMEGA328
 
 
 // Prototypes

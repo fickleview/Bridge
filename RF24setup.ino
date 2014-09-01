@@ -3,10 +3,12 @@
 // RF24 
 
 
+
 #ifdef WIRELESS_RF24
    #include <SPI.h>
-   #include "nRF24L01.h"
-   #include "RF24.h"
+   #include <nRF24L01.h>
+   #include <RF24.h>
+
    
 #endif //WIRELESS_RF24
 
@@ -67,7 +69,7 @@ void writeRF24payload(uint8_t _pipe, char *payload, uint8_t bytes)
 #ifdef DEBRF24
         long _add = pipes[_pipe];
         Serial << F(">> Opened pipe#: ") <<  _HEX(_pipe) << F(" Add: ") << _HEX(_add) << endl;
-        radio.printDetails();
+       // radio.printDetails();
 #endif // DEBRF24
         
   delay(5); // necessary when not printing details

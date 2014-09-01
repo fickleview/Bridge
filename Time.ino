@@ -1,4 +1,4 @@
-// Last Modified 2015-04-17 2120J
+// Last Modified 2014-08-01 0718J
 // Should not be modified 
 
 // TTTTTTTTTTTTTTTT  Time 2.0 *****************************
@@ -11,6 +11,10 @@
 
 int mS_time_t()   // 0 to 999 ms between seconds
 {
+ if(!millis() % 100)
+ {
+  task10xS();
+ }
   return millis() % 1000;
 }
 

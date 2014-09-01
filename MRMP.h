@@ -6,8 +6,8 @@
 
 
 // EEPROM target only one
- #define ATMEGA2560    //  4k EEPROM
-// #define ATMEGA328     //  1k EEPROM
+// #define ATMEGA2560    //  4k EEPROM
+ #define ATMEGA328     //  1k EEPROM
 //#define  ATMEGA168    // .5k EEPROM
 // Be sure to  pick a Tools > Board > that matches the Atmega selected above.
 // These directives simply allow for more EEPROM records  (14, 56, 227 records)
@@ -28,7 +28,7 @@
 //#define DEBRF24       // Wireless degugging A few debug printouts 
 //#define DEBRF24RADIO  // Use in addition to basic DEBRF24 for more details, A few debug printouts 
 
-#define DEBUG_MACHINE_PACKETS // A few debug printouts
+//#define DEBUG_MACHINE_PACKETS // A few debug printouts
 
 
 //#define DEBUG_UNIX     // UNIX time updates, A few debug printouts              
