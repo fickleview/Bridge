@@ -1,7 +1,7 @@
+
 // Last modified 
 // Your controller code here
 
-OneWire ds18b20(DS18B20_PIN);  // OneWire is a Dallas Semiconductor library
   
 void userSetup()  // Called once during setup avoid modifying SetuAndLoop
 {
@@ -11,7 +11,7 @@ void userSetup()  // Called once during setup avoid modifying SetuAndLoop
 
 void userTasks() // Called during every loop. Avoid tasks that block.
 {
- 
+ EXEC(SM_DS18B20);  // Statemeachine implementation
 }
 
 
@@ -80,24 +80,6 @@ void task10xS()
 void taskEverySecond()
 {
   
- switch (iGetTemps)
-  {
-   
-   case (1):
-   getTempFrom(DS18B20_BRIDGE_INSIDE_ADD);
-   break;
-   
-   case(2):
-   getTempFrom(DS18B20_BRIDGE_OUTSIDE_ADD);
-   break;
-   
-   case(3):
-   Serial << F("RXXB*N4,116,") << *insideTemp305 << "," << *outsideTemp306 << ","  << *absolute_time_t501 << "#" << endl;
-
-   iGetTemps= 0;
-   break;
-  }
-
 
   if(!(*absolute_time_t501 % 10))  // every ten seconds
   {
@@ -129,13 +111,36 @@ void taskEveryMinute()
 {
 
  
-  if(!(*absolute_time_t501 % 600))  // every ten minutes
+  SM_DS18B20.Set(SM_start_DS18B20); // Start a state machine that polls temp sensors
+
+  if(!(*absolute_time_t501 % 900))  // every fifteen minutes send a notification packet for the record
   {
-      iGetTemps = 1; // A series
- 
+       Serial << F("RXXB*N4,116,") << *insideTemp305 << "," << *outsideTemp306 << ","  << *absolute_time_t501 << "#" << endl;
   }
   
+ #ifdef LCD_DISPLAY
+ //lcd.clear();
+ 
+ lcd.setCursor(0,0); //Start at character 0 on line 0
+  lcd.print(F("Out:"));
+  printIntx10ToDec(*outsideTemp306);
   
+  
+  lcd.setCursor(0,1); //Start at character 0 on line 1
+  lcd.print(F(" In:"));
+  printIntx10ToDec(*insideTemp305);
+
+  printLCDtime(15,0);
+  
+   
+  lcd.setCursor(0,3); //Start at character 0 on line 1
+  lcd.print(F("Stove: ?   "));  // clear the displayed temp
+  
+  
+   sendMachinePacketTo('D', 'd', 'R', 'G', '1', 308, 0, 0, 0, '0');  // 'd' is the Wood Stove RF24 address 308 is *lastStoveTemp308   
+
+ #endif
+ 
   if(hourIs() == 4 && minuteIs() == 2) // TZ changes at 02:00 Spring, 03:00 Fall, Bridge updated by script every hour at xx:01
   {
         #ifdef FETCH_UNIX_TIME 
@@ -158,7 +163,7 @@ if(hourIs() == 4 && minuteIs() == 3) // The following minute. Too much blocking 
    printTime();    
    Serial << F("Free mem:") << freeRam() << endl;
    
-   
+  
    #ifdef WATCHDOG
      watchDog();   // Will remove power from router and DSL if awaken.
    #endif
@@ -188,7 +193,14 @@ if(hourIs() == 4 && minuteIs() == 3) // The following minute. Too much blocking 
 void taskEveryHour()
 {
 
+#ifdef LCD_DISPLAY
 
+  lcd.setCursor(0,2);         //Start at character 0 on line 2
+  lcd.print(F(" mm: ?   "));  // clear the displayed mm rain
+   // Reply will update the display
+   sendMachinePacketTo('E', 'b', 'R', 'G', '1', 305, 0, 0, 0, '0');  // 'b' is the Irrigation RF24 address 305 is *mmToday305   
+
+#endif // LCD_DISPLAY
       
 }
 
@@ -297,7 +309,7 @@ void handleTrackingTag()
       
                    handlePings();
                   }     
-               break;  // 302
+               break;  // PING_PIN
             #endif // PING    
              
               }  // parm2
@@ -345,23 +357,45 @@ void handleTrackingTag()
   
     
     
-    case('D'):
+    case('D'):  // Wood stove temp query
     
      #ifdef DEBUG_MACHINE_PACKETS
      Serial << F("Tracking tag case:") << MRMP_TagInStr << endl;
      #endif
      
+      #ifdef LCD_DISPLAY
+
+
+      lcd.setCursor(7,3); //Start at character 0 on line 3
+      if(parm3 < 100)
+      {
+       lcd.print(F("Out"));
+      }
+      else
+      {
+      lcd.print(parm3);  // Last stove temp
+      }
+      #endif //  LCD_DISPLAY
+ 
     break;  //  'D'
     
     
     
     
-    case('E'):
+    case('E'):  // mm Rain
     
          #ifdef DEBUG_MACHINE_PACKETS
      Serial << F("Tracking tag case:") << MRMP_TagInStr << endl;
      #endif
      
+         #ifdef LCD_DISPLAY
+
+
+      lcd.setCursor(4,2); //Start at character 5 on line 2
+       printIntx10ToDec(parm3);
+       
+      #endif //  LCD_DISPLAY
+      
     break;  // 'E'
     
      

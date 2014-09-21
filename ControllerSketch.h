@@ -23,6 +23,8 @@ const int  DOUBLE_FIELD_SIZE= 0;
 const int  DS18B20_PIN= 3;
 
 // Prototypes
+
+
 extern void userSetup();
 extern void userCommand(char);
 

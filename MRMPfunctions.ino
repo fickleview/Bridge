@@ -701,6 +701,28 @@ void executeCommand()  // Commands built by processCommand will be executed
 
         break; // Notifications
      
+         case 'D':  // Display
+    
+    if(group =='a' || group == 'm' || (MRMP_TagInStr == MACHINE_TAG) || WithinTrackingTagRange(tagrmp)) // only admin or moderator group may write
+        {
+        
+            if(commandParameters==4 || commandParameters==5 )
+            {
+             handleDisplay();          
+            }
+            else
+            {
+             RpacketReply('n',0); // Other format not currently accepted
+            }  
+           RpacketReply('0','D'); // Acknowlege with a no error packet.    
+        }
+         else
+        {
+          RpacketReply('A',group);
+        }
+
+        break; // Display
+     
  
   
      case 'P':  // Put data into array
@@ -1035,7 +1057,7 @@ reply = 'n';
 
 void processSerial()
 {
-     if ((inByte < 127 ) && (inByte > 32 ))  // Only printable ASCII
+     if ((inByte < 127 ) && (inByte > 31 ))  // Only printable ASCII
     {
    // Poke the serial into the receive buffer
    //B61 consolidate RF24 and Serial Receive

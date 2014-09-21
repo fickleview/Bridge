@@ -35,7 +35,7 @@ byte byteField[BYTE_FIELD_SIZE];
 
 byte *Address200 = byteField;         // Used by MRMP as ASSCII MRMP address.
 byte *DebugLevel201 = byteField+1;    // Verbosity shown in Okay packet reply,  0 : quiet, 1: basic, 2: verbose 3: extreme
-byte *PineRoomTemp202 = byteField+2;  //
+
 
 
 

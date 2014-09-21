@@ -23,8 +23,7 @@ void setup()
   SerialBridge1.begin(57600);
 #endif
 
-   
-   
+
    Serial << endl << F("THIS_DEV:") << THIS_DEV << F(" Release:") << kRelease  << endl;
    Serial << F("Free memory:") << freeRam() << endl << endl;
 
@@ -44,7 +43,17 @@ void setup()
 Serial  << endl  << endl;
 
 
+#ifdef LCD_DISPLAY
+  lcd.begin(20,4);         // initialize the lcd for 20 chars 4 lines
+  
+  lcd.backlight();         // backlight on  
 
+// NOTE: Cursor Position: CHAR, LINE) start at 0  
+  lcd.setCursor(0,0); //Start at character 0 on line 0
+  lcd.print(THIS_DEV);
+  
+#endif
+   
 #ifdef WIRELESS_RF24
   // RF24 setup
    Serial << F("RF24 Using CE pin:") << CE_pin << endl << endl;

@@ -58,7 +58,7 @@ const int DIGITAL_PIN_MIN  =2;
 const int DIGITAL_PIN_MAX =12;
 
 //#define DHT11_TEMP_HUMD      // 575 Bytes - A means to read a DHT11 temperature and humidity sensor
-
+#define LCD_DISPLAY             // include LCD
 
 // Global define
 

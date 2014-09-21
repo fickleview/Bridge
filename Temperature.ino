@@ -4,84 +4,45 @@
 
 // DS18B20 
 
+OneWire ds18b20(DS18B20_PIN);  // OneWire is a Dallas Semiconductor library
 
-  
-int isTempReady(uint8_t addr[8])
+// DS18B20 Statemachine implementation
+
+// SM_DS18B20.Set(M_start_DS18B20); // Do that when you want to collect temps
+
+State SM_start_DS18B20()
 {
- if((OneWire::crc8( addr, 7)) != addr[7]) 
-   {
-    for( int i = 0; i < 8; i++) 
-    {
-    Serial << "?" << _HEX(addr[i]);
-    }
-    Serial << endl;
-    
-   return -3;  // Improper address
-   }
-   else
-   {
-    if((lDS18b20ConvertStartedAt + CONVERSION_TIME_MS) < millis())
-    {
-       if(ds18b20.reset()) // There is a device on the bus
-       {
-        // ds18b20.write(0xCC, 0);   // Start conversion all devices on bus 0 = no power held high 
-           
-         ds18b20.select(addr);     // Now all ROM commands address this device until next reset
-         ds18b20.write(0x44, 1);   // Start conversion on selected device
-         lDS18b20ConvertStartedAt = millis();
-         return 0;     
-       }
-       else
-       {
-        return -1;  // No devices detected
-       }
-    }
-    else
-    {
-     if(ds18b20.read_bit()) // TRUE when conversion complete. Must be powered bus.
-     {
-       lDS18b20ConvertStartedAt = 0;  // Ready for another conversion
-       return 1; // Completed conversion
-     }
-     else
-     {
-      if((lDS18b20ConvertStartedAt + CONVERSION_TIME_MS) > millis())
-      {
-       return 0; // Incomplete conversion
-      }
-      else
-      {
-       lDS18b20ConvertStartedAt=0; // Ready for another conversion
-       return -2; // Timed out 
-      }
-     }
-    }
-   }
+ //*DS18B20addr   // Start using pointer
+ 
+       ds18b20.reset();                  // reset the bus, no error detection
+       ds18b20.select(DS18B20addr);     // Now all ROM commands address this device until next reset
+       ds18b20.write(0x44, 1);           // Start conversion on selected device
+       
+       SM_DS18B20.Set(SM_wait_DS18B20);  //
+         
 }
 
-
-int getDSB20TempX10(uint8_t addr[8])  // Must call isTempReady(uint64_t addr) and succeed before
+State SM_wait_DS18B20()
 {
- int iDS18BTemp  =0;
- int iDS18B20bits=0;
- byte data[12];
+ if(SM_DS18B20.Timeout(1000)) 
+ {
+  int iDS18BTemp  =0;
+  int iDS18B20bits=0;
+  byte data[12];
  
- ds18b20.reset();
- ds18b20.select(addr);
+   ds18b20.reset();
+   ds18b20.select(DS18B20addr);
    
- // Issue Read scratchpad command
+   // Issue Read scratchpad command
    ds18b20.write(0xBE);
    
- // Receive 9 bytes
+  // Receive 9 bytes
    for ( int i = 0; i < 9; i++) 
    {
    data[i] = ds18b20.read();
    }
-   
-   
- // Calculate temperature value
-  
-    
+     
+ // Calculate temperature value  
    iDS18B20bits = ((data[0] & 0xf) * 625);  // Decimal part *1000
   //  Serial << "Decimal: " << iDS18B20bits << endl;
   //  Serial << "Modulo : " << iDS18B20bits % 1000 << endl;
@@ -94,56 +55,34 @@ int getDSB20TempX10(uint8_t addr[8])  // Must call isTempReady(uint64_t addr) an
    iDS18BTemp=((word(data[1],data[0])) >> 4)*10;
    iDS18BTemp=iDS18BTemp+iDS18B20DecBit;
    
-   return iDS18BTemp;
-}
-
-
-int getTempFrom(uint8_t addr[8])
-{
-
- int errorCode = isTempReady(addr);
- 
- switch(errorCode)
-{
-   case (0):
- //  Serial << iGetTemps << "? ";  // Waiting for conversion to complete
+   switch(DS18B20addr[1])
+   {
+    default:
+    SM_DS18B20.Finish();
+    *insideTemp305 = -32000;
+    *outsideTemp306 = -32000;
+    
+    break;
+    
+   case (INSIDE_DS18B20_SENSOR):
+    *insideTemp305 = iDS18BTemp;
+     DS18B20addr = DS18B20_BRIDGE_OUTSIDE_ADD;
+     SM_DS18B20.Set(SM_start_DS18B20); // Do outside
    break;
- 
-   case (1):
+  
+   case (OUTSIDE_DS18B20_SENSOR):
+    *outsideTemp306 = iDS18BTemp;
+     DS18B20addr = DS18B20_BRIDGE_INSIDE_ADD;
+     SM_DS18B20.Finish();  // In another function 
    
-     switch(iGetTemps)
-     {
-     case (1):
-     *insideTemp305 =  getDSB20TempX10(addr);   
-     iGetTemps = 2;
-     break;
-     
-     case (2):
-     *outsideTemp306  =  getDSB20TempX10(addr);
-     iGetTemps = 3;
-     break;
-     }
-     
    break;
-   // These can be commented out
-   case (-1):
-   Serial << "No DSB20 devices" << endl;
-   break;
- 
-   case (-2):
-   Serial << "DSB20 conversion timed out" << endl;
-   break;
- 
-   case (-3):
-   Serial << "DSB20 CRC of address incorrect" << endl;
-   break;
-
- 
-   default:
-   Serial << "DSB20 error: " << errorCode << endl;
-   break;
-  }
+  
+  
+   }
+ }
 }
+
+// end State machine DS18B20 
 
 
 /*
