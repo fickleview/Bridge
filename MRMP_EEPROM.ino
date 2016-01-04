@@ -1,4 +1,4 @@
-// Last modified 
+// Last modified 2014-09-23
 // Should not be modified
 
 // EEPROM feature directives
@@ -7,21 +7,17 @@
 
  #ifdef SECURITY
     #define  EEPROM_RECORDS   // 900 bytes - Required -  A means to read/write EEPROM records. 
-
-    #include <EEPROM.h> 
   #endif
 
 
  #define  EEPROM_ARRAYS        // 1160 bytes - Optional - A means to read/write MRMP RAM arrays to EEPROM. MUST include EEPROM_RECORDS
    #ifdef EEPROM_ARRAYS    
      #define  EEPROM_RECORDS   // 900 bytes - Required -  A means to read/write EEPROM records. 
-     #include <EEPROM.h>
    #endif
 
 
 #define  EEPROM_RECORDS        // 1160 bytes - Optional - A means to read/write MRMP RAM arrays to EEPROM. MUST include EEPROM_RECORDS
    #ifdef EEPROM_RECORDS    
-     #include <EEPROM.h>
    #endif
    
 // Irrigate EEPROM functions
@@ -218,7 +214,73 @@ void RecordWriteLONG(int p,long l)  //
 
 }
 
+#ifdef  EEPROM_CLONE
+// Clone remote EEPROM arrays
+// Rbd**R2,975,byte# Fetch a byte from the remote EEPROM
 
+int lastEEPROMbyte = 0;
+int currentEEPROMbyte = 0;
+
+char toDevice = 'z';
+
+void readByteFromRemoteEEPROM(char _toDev, int _byteNumber)
+{
+  currentEEPROMbyte = _byteNumber;
+ sendMachinePacketTo( 'D', _toDev, 'R', 'R', '2', 975, _byteNumber,0,0, '0');  // 'D' tag handled by tagged reply code
+  if(currentEEPROMbyte % 50)
+   Serial <<  F(",");
+ 
+}
+
+void writeByteByteFromRemoteEEPROM(int _byte)  // Call back used by 'D' tag handler
+{
+ // Write that byte
+ 
+ Serial << currentEEPROMbyte;
+
+ 
+   RecordWriteBYTE(currentEEPROMbyte,_byte);
+ 
+  
+  if(!(currentEEPROMbyte > lastEEPROMbyte))
+  {
+   currentEEPROMbyte++;
+    readByteFromRemoteEEPROM(toDevice, currentEEPROMbyte);
+  }
+  else
+  {
+   Serial << F("Done.") << endl << endl;
+  }
+ 
+}
+
+
+
+// Rbd**R5,976,fromDev,FirstByte,LastByte,’W’# // 'W' is Wipe local EEPROM
+
+void wipeLocalAndcloneRemoteEEPROMdataArray(char _Dev, int _firstByte, int _lastByte, char _Wipe)
+{
+ if(_Wipe == 'W')
+ {
+ Serial << F("Wiping local EEPROM...") << endl;
+ 
+  WipeEEPROM();  // First wipe the entire local EEPROM
+
+  Serial << F("Wipe complete") << endl;
+
+//Fetch a byte from the remote EEPROM
+// Starts at 0 > 505 for ATMEGA328 2041 for ATMEGA2560
+ }
+ Serial << F("Clone from device: ") << _Dev << endl;
+ 
+lastEEPROMbyte = _lastByte;
+toDevice = _Dev;
+
+readByteFromRemoteEEPROM(toDevice, _firstByte); // Start
+
+}
+
+#endif // EEPROM_CLONE
 
 //LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
 

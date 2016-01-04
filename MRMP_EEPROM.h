@@ -1,4 +1,4 @@
-// Last modified 2014-04-17 2113J
+// Last modified 2014-09-24
 // Should not be modified unlees you have more EEPROM space on your target
 
 #ifndef EEPROM_H
@@ -18,7 +18,7 @@ const int  RECORD_LAST=        4088; // last 9 byte slot that will nor overrun e
 const int  RECORD_POINTER=     2044; // RECORD_FIRST -2
 const int  EEPROM_LAST_BYTE=   4095; // 4k
 const int  RECORD_LAST_NOTIFY= 2042; // RECORD_FIRST -4
-#endif //  // ATMEGA256
+#endif //  // ATMEGA2560
 
 
 #ifdef ATMEGA328
@@ -64,8 +64,8 @@ extern  int RecordLastEEPROMwritten();
 extern void RecordWriteLastNotify(int);
 extern void PollRecordReadEEPROMtoNotify();
 extern void incrementRecordWriteLastNotify();
-
-
+extern void wipeLocalAndcloneRemoteEEPROMdataArray(char, int , int , char);
+extern void readByteFromRemoteEEPROM(char, int);
 
 //EEPROM arrays
 extern char arrayToEEPROM2nn(int, byte);

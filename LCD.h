@@ -6,6 +6,7 @@ extern void printLCDtime(int,int);
 extern void printTempDec(int);
 
 extern void handleDisplay();  // MRMP packet type 'D' received
+extern void displayTempOnAt(char, int, int, int);
 
 #ifdef LCD_DISPLAY
 

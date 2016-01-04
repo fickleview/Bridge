@@ -16,7 +16,7 @@ void stampTrackingTagEpires_mS(char _tag, int _ms)
 {
   if(WithinTrackingTagRange(_tag))
   {
-    absolute_time_tULmSTracking[_tag - ASCII_FIRST_TRACKING_TAG] = *absolute_time_tULmS600 + _ms;
+    absolute_time_tULmSTracking[_tag - ASCII_FIRST_TRACKING_TAG] = (*time_t500 * 1000) + _ms;
   }
 } 
   
@@ -27,9 +27,9 @@ boolean trackingTagNotEpired(char _tag)
   if(WithinTrackingTagRange(_tag))
   {   
      #ifdef DEBUG_MACHINE_PACKETS
-     Serial << F("trackingTagNotEpired - Expiry time:") << absolute_time_tULmSTracking[_tag - ASCII_FIRST_TRACKING_TAG] << F(" Current time:") << *absolute_time_tULmS600 << endl;
+     Serial << F("trackingTagNotEpired - Expiry time:") << absolute_time_tULmSTracking[_tag - ASCII_FIRST_TRACKING_TAG] << F(" Current time:") << (*time_t500 * 1000) << endl;
      #endif
-    if(absolute_time_tULmSTracking[_tag - ASCII_FIRST_TRACKING_TAG] > *absolute_time_tULmS600)
+    if(absolute_time_tULmSTracking[_tag - ASCII_FIRST_TRACKING_TAG] > (*time_t500 * 1000))
     { 
        #ifdef DEBUG_MACHINE_PACKETS
          Serial << F("trackingTagNotEpired - Valid - less than") << endl;
@@ -106,6 +106,10 @@ void sendMachinePacketTo( char _tagrmp, char _toDev, char _type, char _command, 
                 if(_parameters >= '4')
                {
                 RpacketData(_parameter4);
+                  if(_parameters >= '5')
+                 {
+                   RpacketString();
+                 }
                }
              
              }
@@ -124,6 +128,7 @@ void sendMachinePacketTo( char _tagrmp, char _toDev, char _type, char _command, 
     
     
     PacketFooterAndSend();
+    strcpy(MRMPstringDataArray, "?");  // Default the string
     
        #ifdef DEBUG_MACHINE_PACKETS
        Serial << F("Machine packet To: ") << _toDev << F(" MRMPSendPacketBuffer: ") << MRMPSendPacketBuffer << endl;

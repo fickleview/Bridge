@@ -1,10 +1,12 @@
 
-// Last modified 
+// Last modified 2014-09-27
 // Your controller code here
 
   
 void userSetup()  // Called once during setup avoid modifying SetuAndLoop
 {
+ 
+ arrayLoadFromEEPROM3nn(7,7); // Temp cal factor
  
 }
 
@@ -83,9 +85,19 @@ void taskEverySecond()
 
   if(!(*absolute_time_t501 % 10))  // every ten seconds
   {
-    
+   
+  /* 
+   strcpy(MRMPstringDataArray, "Sec: ");  // Have a max of 20 characters in MRMPstringDataArray
+   ltoa(secondIs(),MRMPstringDataArray+strlen(MRMPstringDataArray),10); 
+   
+   
+   sendMachinePacketTo('*', 'X', 'R', 'D', '5', strlen(MRMPstringDataArray), 0, 2, 0, '0');  // '*' is not tracked,  'D' display on LCD,  Column 0 Line 2   
+// void sendMachinePacketTo( char _tagrmp, char _toDev, char _type, char _command, char _parameters, int _parameter1, long _parameter2,long _parameter3,long _parameter4, char _EEPROM)
 
- 
+  */
+   
+   
+     
    if(NOTIFY_DEV != THIS_DEV)
    {
     PollRecordReadEEPROMtoNotify();
@@ -106,15 +118,18 @@ void taskEverySecond()
 }
 
 
+int lastInsideTemp =  0;
+int lastOutsideTemp = 0;
 
 void taskEveryMinute()
 {
-
  
   SM_DS18B20.Set(SM_start_DS18B20); // Start a state machine that polls temp sensors
 
-  if(!(*absolute_time_t501 % 900))  // every fifteen minutes send a notification packet for the record
+  if(!(*absolute_time_t501 % 900) || lastOutsideTemp != *outsideTemp306)  // every fifteen minutes send a notification packet for the record
   {
+    lastOutsideTemp = *outsideTemp306;
+    
        Serial << F("RXXB*N4,116,") << *insideTemp305 << "," << *outsideTemp306 << ","  << *absolute_time_t501 << "#" << endl;
   }
   
@@ -126,22 +141,22 @@ void taskEveryMinute()
   printIntx10ToDec(*outsideTemp306);
   
   
-  lcd.setCursor(0,1); //Start at character 0 on line 1
+  lcd.setCursor(10,0); //Start at character 10 on line 0
   lcd.print(F(" In:"));
   printIntx10ToDec(*insideTemp305);
 
-  printLCDtime(15,0);
   
-   
-  lcd.setCursor(0,3); //Start at character 0 on line 1
-  lcd.print(F("Stove: ?   "));  // clear the displayed temp
-  
-  
-   sendMachinePacketTo('D', 'd', 'R', 'G', '1', 308, 0, 0, 0, '0');  // 'd' is the Wood Stove RF24 address 308 is *lastStoveTemp308   
+   if(*insideTemp305 != lastInsideTemp)
+ {
+  lastInsideTemp = *insideTemp305;
+   sendMachinePacketTo('*', 'd', 'R', 'P', '2', 309, *insideTemp305, 'v', 0, '0'); // Sun Room temperature
 
+ }
+
+  
  #endif
  
-  if(hourIs() == 4 && minuteIs() == 2) // TZ changes at 02:00 Spring, 03:00 Fall, Bridge updated by script every hour at xx:01
+  if(hourIs() == 4 && minuteIs() == 2) // TZ changes at 02:00 Spring, 03:00 Fall, Bridge updated by Perl script every hour at xx:01
   {
         #ifdef FETCH_UNIX_TIME 
           readUNIXtime();      // UNIXTIME_ON_DEV    // where to fetch the UNIX time  if != thsDevice 
@@ -172,7 +187,7 @@ if(hourIs() == 4 && minuteIs() == 3) // The following minute. Too much blocking 
    
    //B85
    #ifdef FETCH_UNIX_TIME
-     if(absolute_time_tULmSTracking[0] || *absolute_time_t501 < BUILD_UNIX_TIME)  // has not been fufilled during startup so keep trying.
+     if(absolute_time_tULmSTracking[0] || (*absolute_time_t501 < BUILD_UNIX_TIME))  // has not been fufilled during startup so keep trying.
      {
        readUNIXtime();
      }
@@ -192,15 +207,6 @@ if(hourIs() == 4 && minuteIs() == 3) // The following minute. Too much blocking 
 
 void taskEveryHour()
 {
-
-#ifdef LCD_DISPLAY
-
-  lcd.setCursor(0,2);         //Start at character 0 on line 2
-  lcd.print(F(" mm: ?   "));  // clear the displayed mm rain
-   // Reply will update the display
-   sendMachinePacketTo('E', 'b', 'R', 'G', '1', 305, 0, 0, 0, '0');  // 'b' is the Irrigation RF24 address 305 is *mmToday305   
-
-#endif // LCD_DISPLAY
       
 }
 
@@ -244,7 +250,7 @@ void handleTrackingTag()
                  #endif
                  
                    *absolute_time_t501   = parm3; 
-                   *absolute_time_tUL601 = (unsigned long)parm3; 
+                  
       
      
                    requestUNIX_TZandDate();
@@ -357,44 +363,27 @@ void handleTrackingTag()
   
     
     
-    case('D'):  // Wood stove temp query
+    case('D'):  // 
     
      #ifdef DEBUG_MACHINE_PACKETS
      Serial << F("Tracking tag case:") << MRMP_TagInStr << endl;
      #endif
      
-      #ifdef LCD_DISPLAY
-
-
-      lcd.setCursor(7,3); //Start at character 0 on line 3
-      if(parm3 < 100)
-      {
-       lcd.print(F("Out"));
-      }
-      else
-      {
-      lcd.print(parm3);  // Last stove temp
-      }
-      #endif //  LCD_DISPLAY
- 
+    #ifdef EEPROM_CLONE
+     writeByteByteFromRemoteEEPROM(parm3);
+    #endif // EEPROM_CLONE
+    
     break;  //  'D'
     
     
     
     
-    case('E'):  // mm Rain
+    case('E'):  
     
          #ifdef DEBUG_MACHINE_PACKETS
      Serial << F("Tracking tag case:") << MRMP_TagInStr << endl;
      #endif
      
-         #ifdef LCD_DISPLAY
-
-
-      lcd.setCursor(4,2); //Start at character 5 on line 2
-       printIntx10ToDec(parm3);
-       
-      #endif //  LCD_DISPLAY
       
     break;  // 'E'
     

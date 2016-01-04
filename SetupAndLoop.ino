@@ -9,7 +9,8 @@ void setup()
 {
  
   Serial.begin(57600);
-
+  delay(1000);
+ 
    int _timerEvent1;
    int _timerEvent2;
 
@@ -160,8 +161,8 @@ arrayLoadFromEEPROM3nn(0,2); // First and Last record,      TZ[300],     Weekday
     RecordWriteLastNotify(RecordLastEEPROMwritten());
   }
  
- Serial << endl << endl << F("Last notify set to 1 in StartupAndLoop") << endl << endl; 
-  RecordWriteLastNotify(1);  // Test
+// Serial << endl << endl << F("Last notify set to 1 in StartupAndLoop") << endl << endl; 
+//  RecordWriteLastNotify(1);  // Test
   
 #endif // EEPROM_RECORDS
 

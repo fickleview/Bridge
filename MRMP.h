@@ -1,4 +1,4 @@
-// Last modified 2014-04-17 2214J
+// Last modified 2014-00-23
 // Should be modified for features and debuging
 
 // Debuging
@@ -6,20 +6,20 @@
 
 
 // EEPROM target only one
-// #define ATMEGA2560    //  4k EEPROM
- #define ATMEGA328     //  1k EEPROM
+#define ATMEGA2560    //  4k EEPROM
+//#define ATMEGA328     //  1k EEPROM
 //#define  ATMEGA168    // .5k EEPROM
 // Be sure to  pick a Tools > Board > that matches the Atmega selected above.
-// These directives simply allow for more EEPROM records  (14, 56, 227 records)
+// These directives allow for more EEPROM records  (14, 56, 227 records) and RF24 pin assignment
 
 
 //#define DEBUG_EEPROM
 #define DEBUG_EEPROM_ARRAYS   // Prints arrays at startup
 #define DEBUG_EEPROM_RECORDS  // Prints records at startup
+//#define EEPROM_CLONE       // 1213 Bytes - A means to clone a remote range of EEPROM locally using MRMP
 
 
  #define  EEPROM_RECORDS   // 900 bytes - Required -  A means to read/write EEPROM records. 
-
 
 
 //#define DEBUGAUTH     // Authentication   requires DEBUG
@@ -29,14 +29,14 @@
 //#define DEBRF24RADIO  // Use in addition to basic DEBRF24 for more details, A few debug printouts 
 
 //#define DEBUG_MACHINE_PACKETS // A few debug printouts
-
+#define DEBUG_RECEIVED_SENT_PACKETS
 
 //#define DEBUG_UNIX     // UNIX time updates, A few debug printouts              
  
  
  // Optional feature Inclusions
     
-// #define FETCH_UNIX_TIME    // Only on Controllers, When set will fetch time from bridge at startup
+//#define FETCH_UNIX_TIME    // Only on Controllers, When set will fetch time from bridge at startup
 
 //#define SECURITY            // 1020 bytes - A means to authenticate user passcodes stored on EEPROM. MUST include EEPROM_RECORDS
     
@@ -58,7 +58,7 @@ const int DIGITAL_PIN_MIN  =2;
 const int DIGITAL_PIN_MAX =12;
 
 //#define DHT11_TEMP_HUMD      // 575 Bytes - A means to read a DHT11 temperature and humidity sensor
-#define LCD_DISPLAY             // include LCD
+//#define LCD_DISPLAY             // include LCD
 
 // Global define
 

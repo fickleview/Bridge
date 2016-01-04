@@ -27,10 +27,15 @@ Port '0' is by default the local serial port.
  
 const  uint64_t RF24_TX_RX_PIPE_ADD_X =0x0101010101LL;  // X
 
-const  uint64_t RF24_TX_RX_PIPE_ADD_A =0x010101010aLL;  // a
-const  uint64_t RF24_TX_RX_PIPE_ADD_B =0x010101010bLL;  // b
-const  uint64_t RF24_TX_RX_PIPE_ADD_C =0x010101010cLL;  // c
-const  uint64_t RF24_TX_RX_PIPE_ADD_D =0x010101010dLL;  // d
+const  uint64_t RF24_TX_RX_PIPE_ADD_A =0x010101010aLL;  // a Boat
+const  uint64_t RF24_TX_RX_PIPE_ADD_G =0x010101010fLL;  // g Boat Engine 
+
+const  uint64_t RF24_TX_RX_PIPE_ADD_B =0x010101010bLL;  // b Irrigation
+const  uint64_t RF24_TX_RX_PIPE_ADD_C =0x010101010cLL;  // c LED
+const  uint64_t RF24_TX_RX_PIPE_ADD_D =0x010101010dLL;  // d Wood Stove
+const  uint64_t RF24_TX_RX_PIPE_ADD_P =0x010101010eLL;  // p Prop case 
+
+
 
 
 // **************** Sample congigurations 1 *********************
@@ -58,7 +63,7 @@ const char UNIXTIME_ON_DEV ='X';      // where to fetch the UNIX time at startup
 const char THIS_DEV ='X';
 const int kNumberOfPipes =4;
    const  uint64_t pipes[] = {RF24_TX_RX_PIPE_ADD_A,RF24_TX_RX_PIPE_ADD_B,RF24_TX_RX_PIPE_ADD_C,RF24_TX_RX_PIPE_ADD_D};   // Transmit to RF24 address port list. X[0] a[1]  b[2] c[3] d[4]
-   const char routeTable[] = "a0,b1,c2,d3,0*,Y',1*,2',3*,4*,5*,6*,7*,8*,9*";     // Comma delimited pairs. toDev and Port ie write to a use port 0
+   const char routeTable[] = "a0,g0,b1,c2,p2,d3,0*,Y',1*,2',3*,4*,5*,6*,7*,8*,9*";     // Comma delimited pairs. toDev and Port ie write to a use port 0
    
   #define WIRELESS_RF24        // Required to compile RF24 wireless library and functions
 

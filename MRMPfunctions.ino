@@ -1,4 +1,4 @@
-// Last modified 
+// Last modified 2015-01-29
 // Should not be modified
 
    /*
@@ -35,6 +35,18 @@ void RpacketData(long data)   // Builds string ,1234   where 1234 is data
   MRMPPacketBufferPointer = MRMPSendPacketBuffer+strlen(MRMPSendPacketBuffer);
 
 }
+
+void RpacketString()
+{
+       *MRMPPacketBufferPointer = ',';
+       MRMPPacketBufferPointer++;
+       //xxxx
+       sstrcpy(MRMPPacketBufferPointer,MRMPstringDataArray,21);
+       
+       MRMPPacketBufferPointer = MRMPPacketBufferPointer+strlen(MRMPstringDataArray);
+      
+}
+
 
 void ByePacketFrom(char _to, char _from)
 {
@@ -86,7 +98,7 @@ void RpacketReply( char _error, long _data)
       _reply = REPLY_TRACKING_TAG_CHAR;
     }
   
-      if(*DebugLevel201 >1 || _error > '0')  // Verbosity level 1 to 3 or error 
+      if(*DebugLevel201 > 1 || _error > '0')  // Verbosity level 1 to 3 or error 
       {
       packetHeader('E', 'R',fromDev,toDev,_reply); 
       if(*DebugLevel201==2)
@@ -117,7 +129,7 @@ void RpacketReply( char _error, long _data)
         MRMPPacketBufferPointer++;
         }
             PacketFooterAndSend();
-      } // Verbosity level 1 to 3 or error
+      } // Verbosity level 2 to 3 or error
       
   else if (*DebugLevel201==1)
   {
@@ -146,13 +158,6 @@ void okay()
 
 void getData()   // fieldType = FieldBase, field = element in the array
 {
-  byte _formerDebugLevel = *DebugLevel201;
-  
-     if(*DebugLevel201 < 2 )
-     {
-       *DebugLevel201 = 2;   // So there is sometnig to see on reply
-     }
-  
   
   switch (fieldType) 
   {
@@ -282,7 +287,7 @@ void getData()   // fieldType = FieldBase, field = element in the array
     //group = '\0';
     RpacketReply('g',0);
   }
-  *DebugLevel201 = _formerDebugLevel; // put it back
+
 }
 
 
@@ -1170,13 +1175,20 @@ char elementInRouteTable(char _Dev)
 
 
 
-void parseRecPacket() // Rather than process the packet a char at a time, provess the entire string
+void parseRecPacket() // Rather than process the packet a char at a time, process the entire string
 {
      
   #ifdef DEBUGREC
        Serial << "Parsing: " << MRMPRecPacketBuffer << endl;
    #endif
+   
+   #ifdef DEBUG_RECEIVED_SENT_PACKETS
+       Serial << endl << "DEBUG_RECEIVED: " << MRMPRecPacketBuffer << endl;
+   #endif
+   
    char _priorTag = tagrmp;
+   
+   
    
    lastProcessTime = *time_t500;
    

@@ -1,6 +1,5 @@
-// Last modified 2014-09-01 
+// Last modified 2014-12-10
 // Should not be modified
-
 
 // DS18B20 
 
@@ -22,59 +21,95 @@ State SM_start_DS18B20()
          
 }
 
+
+byte aScratchPad[8];
+
+byte *TempLSB = aScratchPad;     // Only three elemements are named
+byte *TempMSB = aScratchPad+1;  
+byte *CRC     = aScratchPad+8;   // We need all ScratchPad to create a CRC for comparison to what was sent
+
+
+void printBinaryBits (byte bits)
+{
+ for(int b = 7; b>=0; b--)
+ {
+ Serial << bitRead(bits,b);
+ }
+}
+
+
+
 State SM_wait_DS18B20()
 {
  if(SM_DS18B20.Timeout(1000)) 
  {
-  int iDS18BTemp  =0;
-  int iDS18B20bits=0;
-  byte data[12];
+  int iDS18BTemp  =0;  // The last four bits of the MSB, Data[1]
+  int iDS18B20bits=0;  // The last four bits of the LSB, Data[0] the decimal part, each bit .0625 degrees C
+  int iDS18B20bit =0;  // The single decimal bit x10 that we will retain from all bits
+  
+ float fDS18BTemp  =0.0;
+    
+  bool bCRCfailed = false;
+
+
+
  
    ds18b20.reset();
    ds18b20.select(DS18B20addr);
    
-   // Issue Read scratchpad command
+                      // Issue Read scratchpad command
    ds18b20.write(0xBE);
    
-  // Receive 9 bytes
-   for ( int i = 0; i < 9; i++) 
-   {
-   data[i] = ds18b20.read();
-   }
-     
- // Calculate temperature value  
-   iDS18B20bits = ((data[0] & 0xf) * 625);  // Decimal part *1000
-  //  Serial << "Decimal: " << iDS18B20bits << endl;
-  //  Serial << "Modulo : " << iDS18B20bits % 1000 << endl;
-   int iDS18B20DecBit = iDS18B20bits / 1000;
-   if ((iDS18B20bits % 1000) >= 750)
-   {
-    iDS18B20DecBit +=1; // round up
-   }
+                      // Read 9 bytes: aScratchPad[0], aScratchPad[1] ... aScratchPad[8]
+  for ( int i = 0; i < 9; i++) 
+  {
+   aScratchPad[i] = ds18b20.read(); 
+  }
+ 
+  if (OneWire::crc8(aScratchPad, 8) != *CRC)  // Compute the CRC using oneWire function and compare it to what was read
+  {
+   bCRCfailed = true;
+                                               Serial << endl << F("==== CRC FAILED ====") << endl << endl;
+  }
+  else
+  {
+ 
+                       // Calculate temperature 
+                  
+    fDS18BTemp = (((*TempMSB << 8) + *TempLSB) * 0.625) ; 
+    iDS18BTemp = (int)fDS18BTemp;
    
-   iDS18BTemp=((word(data[1],data[0])) >> 4)*10;
-   iDS18BTemp=iDS18BTemp+iDS18B20DecBit;
-   
+}
    switch(DS18B20addr[1])
    {
     default:
     SM_DS18B20.Finish();
-    *insideTemp305 = -32000;
+    *insideTemp305  = -32000;
     *outsideTemp306 = -32000;
     
     break;
     
    case (INSIDE_DS18B20_SENSOR):
-    *insideTemp305 = iDS18BTemp;
+     if(bCRCfailed == false)
+     {
+      *insideTemp305 = iDS18BTemp;
+     }
      DS18B20addr = DS18B20_BRIDGE_OUTSIDE_ADD;
      SM_DS18B20.Set(SM_start_DS18B20); // Do outside
    break;
   
    case (OUTSIDE_DS18B20_SENSOR):
-    *outsideTemp306 = iDS18BTemp;
-     DS18B20addr = DS18B20_BRIDGE_INSIDE_ADD;
+     if(bCRCfailed == false)
+     {
+      //*outsideTemp306 = iDS18BTemp;
+      int calFactor = ((*insideTemp305 - iDS18BTemp)*10)/ *calFactorTemp307;
+
+      *outsideTemp306 = iDS18BTemp - calFactor ;   // cal factor through the wall probe
+                                                       Serial << endl << endl << "In: " << *insideTemp305 << " Out: " << iDS18BTemp << " Cal: " << calFactor << " Cor: " << *outsideTemp306 << endl << endl;
+     }                                                 
+        
+     DS18B20addr = DS18B20_BRIDGE_INSIDE_ADD;                                
      SM_DS18B20.Finish();  // In another function 
-   
    break;
   
   
@@ -83,6 +118,8 @@ State SM_wait_DS18B20()
 }
 
 // end State machine DS18B20 
+
+
 
 
 /*

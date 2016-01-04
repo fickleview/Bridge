@@ -55,6 +55,7 @@ int *watchDogState304  = intField + 4;  // A flag to force a power cycle.
 
 int  *insideTemp305    = intField +5;   //
 int *outsideTemp306    = intField +6;   //
+int *calFactorTemp307  = intField +7;   // A calibration factor ro adjust for exterior temperature affected by inside migration down the probe.
 
 // unsigned int  elements 400 to 499
 const int UINT_FIELD_BASE =400;
@@ -76,8 +77,8 @@ long *watchDogLastBark502 = longField + 2;  // UNIX time of last successful ping
 const int ULONG_FIELD_BASE =600;
 //#define U_LONG_FIELD_SIZE  2
 unsigned long UlongField[U_LONG_FIELD_SIZE];
-unsigned long *absolute_time_tULmS600 = UlongField    ;  // absolute_time_tUL601 plus mS - Updated periodically
-unsigned long *absolute_time_tUL601   = UlongField + 1;  // UL Updated periodically. Same as absolute_time_t501 but will not rollover
+//unsigned long *absolute_time_tULmS600 = UlongField    ;  // absolute_time_tUL601 plus mS - Updated periodically
+//unsigned long *absolute_time_tUL601   = UlongField + 1;  // UL Updated periodically. Same as absolute_time_t501 but will not rollover
 
 // float         elements 700 to 799
 const int FLOAT_FIELD_BASE =700;

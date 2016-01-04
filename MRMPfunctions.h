@@ -1,4 +1,4 @@
-// Should not be modified
+// Last modified 2014-00-23
 
 #ifndef kMRMPfunctions_h
 #define kMRMPfunctions_h
@@ -7,6 +7,7 @@
 //Prototypes
 
 extern void RpacketData(long);
+extern void RpacketString();
 extern void ByePacketFrom(char, char)  ;
 extern void packetHeader(char, char, char, char, char)  ;
 
@@ -57,7 +58,9 @@ long lastProcessTime;         // Used to timeout processing of packest from dead
 byte commandParameters = 0;  //Byte 5 
 
 
-char *parameterPointerArray[10];   // MRMP Parameter array
+char *parameterPointerArray[10];       // MRMP Parameter array
+char    MRMPstringDataArray[21] = "/0"; // Optional string data in 5th parameter of sent packet
+
 
 // Bytes 7 to 9. See field array notes. [1]
 int field     = 0;           // 00 to 99  bytes 8 aand 9
@@ -70,6 +73,7 @@ long parm1;               // First  MRMP Parameter converted long
 long parm2;               // Second MRMP Parameter converted long
 long parm3;               // Third  MRMP Parameter converted long
 long parm4;               // Fourth MRMP Parameter converted long
+long parm5;               // Fifth  MRMP Parameter converted long
 
 char errorMRMP = '?';
 char inByte = 0;          // Byte read from serial port

@@ -15,13 +15,13 @@ Uno           Mega
 12       -      50            (MISO)
 13       -      52            (SCK)
 10        -     53            (CSN)
-9       -       40 (Your choice) (CE)
+9       -       48 (Your choice) (CE)
 
 */
 
 
 #ifdef ATMEGA2560
- const int CE_pin  = 40; // Usually 40 but that may be used on other shields
+ const int CE_pin  = 48; // Usually 40 but that may be used on other shields
  const int CSN_pin = 53;
 #endif //
 

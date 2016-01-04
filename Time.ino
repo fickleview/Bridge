@@ -110,7 +110,7 @@ void printTime()
      {
        Serial << "0";
      }
-   Serial << secondIs() << "J" << endl;  // Juliet is local time zone
+   Serial << secondIs() << "Z" << endl;  // Juliet is local time zone
 }
 
 // TickTock is called by a Timer.h event handler every second, created in Setup.
@@ -120,7 +120,7 @@ void tickTock()
 
     *time_t500 +=1;           // Since startup, no drift adjust
     *absolute_time_t501 +=1;  // Absolute, drift adjusted. For time stamps.
-    *absolute_time_tUL601 +=1; 
+    
 
     // When the absoulte time is adjusted (every day) the task may be repeated if the relative clock is 
     // drifting ahead of absolute time.

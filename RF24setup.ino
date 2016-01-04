@@ -1,6 +1,6 @@
-// Built on 2.1.209 
+// Built on 2015-01-29
 // Should not be modified
-// RF24 
+// RF24ne optimized library no longer a return from read
 
 
 
@@ -105,6 +105,7 @@ void writePacketToPipe( char *_buffer)  // packet buffer can be mutiples of 32 m
 {
   
 
+       
   int  _count =   strlen(_buffer);
   
   char addr =      *(_buffer+ MRMP_TO_INDEX);
@@ -118,7 +119,7 @@ void writePacketToPipe( char *_buffer)  // packet buffer can be mutiples of 32 m
     pipe_num = elementInRouteTable(addr); // scans routing table for a pipe to send on
     
        #ifdef DEBUGREC
-       Serial << F("Pipe ASCII:") << pipe_num << F(" Write Count:") << _count << F(" To:") << addr << F(" Writing:") <<  _buffer << endl;
+       Serial << F("Pipe ASCII:") << pipe_num << F(" Send Count:") << _count << F(" To:") << addr << F(" Writing:") <<  _buffer << endl;
        #endif
          
          
@@ -126,6 +127,10 @@ void writePacketToPipe( char *_buffer)  // packet buffer can be mutiples of 32 m
     {
     #ifdef WIRELESS_RF24
      
+       #ifdef DEBUG_RECEIVED_SENT_PACKETS
+       Serial << F("DEBUG_SENT:")  <<  _buffer << endl;
+       #endif
+       
       stampTrackingTagEpires_mS(*(_buffer+ MRMP_TAG_INDEX),TRACKING_TAG_EXIPRY_mS);
      
       pipe_num = pipe_num-ASCII_0;
@@ -200,7 +205,7 @@ void writePacketToPipe( char *_buffer)  // packet buffer can be mutiples of 32 m
               
            }
            
-           if (_reply == 'r')
+           if ((_reply == 'r') && (*DebugLevel201 > 2))
            {
              Serial  << _buffer << endl;
            }
@@ -219,16 +224,17 @@ uint8_t checkRF24forPayload()
 {
 
   
-   if ((processing == 'N') || (processing == 'R'))
+  if ((processing == 'N') || (processing == 'R'))
   {
 
      if ( radio.available())    
      {
       uint8_t len;
-      bool done = false;
+      //bool done = false;  // Using new library
       
       	len = radio.getDynamicPayloadSize();
-	done = radio.read( receive_payload, len );
+        radio.read( receive_payload, len );
+	//done = radio.read( receive_payload, len );// Using new library
 
         
 	// Put a zero at the end for strcpy
@@ -262,15 +268,16 @@ uint8_t checkRF24forPayload()
                    
                  parseRecPacket();
                  processing = 'N'; // All chunks have been processed
-            
+                return true;
               
              }
              else
              {
-            
+             
              #ifdef DEBUGREC
              Serial << F("  Incomplete packet: ") << MRMPRecPacketBuffer << endl;
              #endif
+             return false; //
              }
              
          }
@@ -284,10 +291,10 @@ uint8_t checkRF24forPayload()
              #ifdef DEBUGREC
              Serial << F("  RF24 Packet overrflow") << endl;
              #endif
-            
+            return false; //
          }
          
-      return done;  
+      return true;  
     }
     else
     {
